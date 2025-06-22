@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from '../css/InnerDashboard.module.css'
+import email from '../assets/images/email.png'
+import calendar from '../assets/images/calendar.png'
+import user from '../assets/images/user.png'
 
 export default function InnerDashboard() {
     
@@ -30,7 +33,17 @@ export default function InnerDashboard() {
         },
       ];
 
-      const [sales, setSales] = useState(dummySales);
+    const [sales, setSales] = useState(dummySales);
+    const [userInfo,setUserInfo] = useState({
+      name:'',
+      phoneNumber:'',
+      email:'',
+      registerationDate:''
+    })
+
+    useEffect(()=>(
+      setUserInfo({name:'Ali Ali',phoneNumber:'3232322234',email:'example@gmail.com',registerationDate:'22/6/25'})
+    ),[])
 
     const filters = ['All', 'Monthly', 'Weekly', 'Today'];
     const [currentFilter, setCurrentFilter] = useState('All');
@@ -41,8 +54,33 @@ export default function InnerDashboard() {
 
 
   return (
-    <>
+    
         <div className={styles.container} >
+
+            <div className={styles.profileWrapper}>
+              <div className={styles.profileCard}>
+                <img className={styles.avatar} src={user} alt="profile" />
+                <h3 className={styles.name}>{userInfo.name}</h3>
+                <p className={styles.phone}>+{userInfo.phoneNumber}</p>
+
+                <div className={styles.infoBox}>
+                  <img src={email} alt="email" className={styles.icon} />
+                  <div>
+                    <div className={styles.label}>Email</div>
+                    <div className={styles.text}>{userInfo.email}</div>
+                  </div>
+                </div>
+
+                <div className={styles.infoBox}>
+                  <img src={calendar} alt="calendar" className={styles.icon} />
+                  <div>
+                    <div className={styles.label}>Registered Since</div>
+                    <div className={styles.text}>{userInfo.registerationDate}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
             <div className={styles.header}>
                 <h2 className={styles.title} >Recent Sales</h2>
@@ -90,6 +128,6 @@ export default function InnerDashboard() {
             </div>
 
         </div>
-    </>
+    
   )
 }
