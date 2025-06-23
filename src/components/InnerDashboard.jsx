@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from '../css/InnerDashboard.module.css'
 import email from '../assets/images/email.png'
 import calendar from '../assets/images/calendar.png'
@@ -9,7 +9,7 @@ export default function InnerDashboard() {
     const dummySales = [
         {
           id: '01015',
-          datetime: '2022-05-17 22:00',
+          datetime: '2025-05-20 22:00',
           type: 'Rings',
           customer: 'Masud Rana',
           status: 'Complete',
@@ -17,7 +17,7 @@ export default function InnerDashboard() {
         },
         {
           id: '01016',
-          datetime: '2022-06-01 20:30',
+          datetime: '2025-05-01 20:30',
           type: 'Chains',
           customer: 'Masud Rana',
           status: 'Pending',
@@ -25,7 +25,7 @@ export default function InnerDashboard() {
         },
         {
           id: '01017',
-          datetime: '2022-06-21 15:15',
+          datetime: '2025-05-23 15:15',
           type: 'Set',
           customer: 'Masud Rana',
           status: 'Complete',
@@ -52,6 +52,32 @@ export default function InnerDashboard() {
       setCurrentFilter(filter)
     }
 
+    const filteredSales = useMemo(()=>{
+      const today = new Date();
+      let result=sales;
+      if(currentFilter==='Today'){
+        result = sales.filter((item)=>{
+          const saleDate = new Date(item.datetime);
+          return saleDate.toDateString() === today.toDateString()
+        })
+      } else if(currentFilter==='Weekly'){
+          const week = new Date();
+          week.setDate(today.getDate()-7)
+        result = sales.filter((item)=>{
+          const saleDate = new Date(item.datetime);
+          return saleDate >= week && saleDate<=today
+        })
+      } else if(currentFilter==='Monthly'){
+        result = sales.filter((item)=>{
+          const saleDate = new Date(item.datetime);
+
+          return (saleDate.getMonth()===today.getMonth() && saleDate.getFullYear()===today.getFullYear())
+        })
+      }
+
+      return result;
+
+    },[filters,sales])
 
   return (
     
@@ -110,8 +136,14 @@ export default function InnerDashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                          sales.map((item,_)=>(
+                        { filteredSales.length===0 ? (
+                            <tr>
+                              <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>
+                                No sales found
+                              </td>
+                            </tr>
+                          ) : (
+                          filteredSales.map((item,_)=>(
                             <tr key={item.id}>
                                <td>{item.id}</td>
                               <td>{item.datetime}</td>
@@ -122,6 +154,7 @@ export default function InnerDashboard() {
 
                             </tr>
                           ))
+                          )
                         }
                     </tbody>
                 </table>
