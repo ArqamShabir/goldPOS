@@ -2,7 +2,7 @@
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
-    background-color: #f5f3ef;
+    background-color: transparent;
 }
 
 .header{
@@ -43,18 +43,20 @@
     border-color: #dfb15b;
   }
 
-  .tableContainer{
-    overflow-x: auto;
-  }
+  .tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 
   .table {
     width: 100%;
-    min-width: 700px;
     border-collapse: collapse;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    table-layout: fixed;
+  table-layout: auto;
   }
   
   .table th,
@@ -62,6 +64,7 @@
     padding: 12px 16px;
     text-align: left;
     border-bottom: 1px solid #eee;
+     white-space: nowrap; 
     font-size: 0.95rem;
     color: #888;
   }
@@ -254,3 +257,15 @@
         font-size: 0.75rem;
       }
   }
+
+  .avatarIcon {
+  color: #999;
+  margin-bottom: 10px;
+}
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
