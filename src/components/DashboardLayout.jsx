@@ -20,12 +20,12 @@ const DashboardLayout = () => {
         <nav>
           <ul>
             <li>
-              <NavLink to="home" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="/dashboard" className={({ isActive }) => isActive ? styles.active : ''}>
                 🏠 Home
               </NavLink>
             </li>
             <li>
-              <NavLink to="/record" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="record" className={({ isActive }) => isActive ? styles.active : ''}>
                 ⚙️ Create Record
               </NavLink>
             </li>
