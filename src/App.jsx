@@ -5,12 +5,15 @@ import Home from './pages/Home';
 import Form from './pages/Form';
 import Customers from './pages/Customers';
 import Retailers from './pages/Retailers';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/"  element={<Login/>} />
+      {/* <Route path="/"  element={<Login/>} /> */}
+      <Route path="/"  element={<LandingPage/>} />
+
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="" element={<Home />} />
           <Route path="customers" element={<Customers />} />
