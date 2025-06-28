@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
-        const res = await fetch('http://localhost:5000/api/verify-token', {
+        const res = await fetch('http://auricpos.com/api/verify-token', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
