@@ -5,13 +5,18 @@ import Home from './pages/Home';
 import Form from './pages/Form';
 import Customers from './pages/Customers';
 import Retailers from './pages/Retailers';
+import PrivateRoute from './components/PrivateRoute'; 
 
 function App() {
   return (
     <Router>
       <Routes>
       <Route path="/"  element={<Login/>} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={
+             <PrivateRoute>
+                  <DashboardLayout />
+             </PrivateRoute>
+         }>
           <Route path="" element={<Home />} />
           <Route path="customers" element={<Customers />} />
             <Route path="retailers" element={<Retailers />} />
