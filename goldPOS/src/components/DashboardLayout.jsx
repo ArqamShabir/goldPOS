@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from '../css/Sidebar.module.css'; 
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+   const navigate = useNavigate(); 
+
+     const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
+  };
 
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -20,25 +26,28 @@ const DashboardLayout = () => {
         <nav>
           <ul>
             <li>
-              <NavLink to="/dashboard" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="/dashboard"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
                 🏠 Home
               </NavLink>
             </li>
             <li>
-              <NavLink to="record" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="record"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
                 ⚙️ Create Record
               </NavLink>
             </li>
             <li>
-              <NavLink to="customers" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="customers"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
                 👤 Customers
               </NavLink>
             </li>
             <li>
-              <NavLink to="retailers" className={({ isActive }) => isActive ? styles.active : ''}>
+              <NavLink to="retailers"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
                 ⚙️ Retailers
               </NavLink>
             </li>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                Logout
+              </button>
           </ul>
         </nav>
       </aside>

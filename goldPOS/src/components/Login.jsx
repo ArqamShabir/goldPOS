@@ -8,15 +8,30 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // 👈 for navigation
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Login clicked");
-    console.log("Username:", username);
-    console.log("Password:", password);
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    // You can add real authentication here
-    navigate('/dashboard'); // 👈 go to dashboard
-  };
+  try {
+    const response = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      navigate('/dashboard');
+    } else {
+      alert(data.message || 'Login failed');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('An error occurred');
+  }
+};
+
 
   return (
     <div className={style.loginContainer}>

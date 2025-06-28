@@ -46,7 +46,10 @@
   color: #444;
   transition: background 0.2s;
 }
-
+.sidebar li a{
+  width: 100%;
+  color: #000;
+}
 .sidebar li:hover {
   background-color: #f3f3f3;
 }
@@ -93,6 +96,23 @@
   flex: 1;
   padding: 20px;
 }
+.sidebar a {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar a:focus,
+.sidebar a:active,
+.sidebar a:hover,
+.sidebar a:visited {
+  outline: none;
+  text-decoration: none;
+  color: inherit;
+}
+
 
 /* Overlay */
 .overlay {
@@ -124,4 +144,17 @@
   .overlay {
     display: block;
   }
+}
+.logoutBtn {
+  background: #f5c960;
+  border: none;
+  color: #fff;
+  font: inherit;
+  border-radius: 7px;
+  text-align: left;
+  width: 80%;
+  padding: 0.5rem 1rem;
+  margin: 30px 10%;
+  cursor: pointer;
+  text-align: center;
 }

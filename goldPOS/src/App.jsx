@@ -22,7 +22,7 @@ function App() {
           <Route path="" element={<Home />} />
           <Route path="customers" element={<Customers />} />
             <Route path="retailers" element={<Retailers />} />
-              <Route path="record" element={<Form />} />
+            <Route path="record" element={<Form />} />
         </Route>
         <Route path="*" element={<div>404 - Not Found</div>} />
       </Routes>

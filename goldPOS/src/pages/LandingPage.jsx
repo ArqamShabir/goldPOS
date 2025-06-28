@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../css/LandingPage.module.css';
+import { useNavigate } from 'react-router-dom'; 
 
 const plansData = [
   {
@@ -46,7 +47,15 @@ const plansData = [
 ];
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
+    <>
+       <header className={styles.headerBar}>
+        <div className={styles.logoText}>AURICPOS</div>
+        <button className={styles.loginBtn} onClick={() => navigate('/login')}>
+          Login
+        </button>
+      </header>
     <section className={styles.pricingSection}>
       <div className={styles.planHeader}>
         <h2>Choose Your Plan</h2>
@@ -101,6 +110,7 @@ const LandingPage = () => {
         ))}
       </div>
     </section>
+        </>
   );
 };
 
