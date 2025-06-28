@@ -6,12 +6,14 @@ import Form from './pages/Form';
 import Customers from './pages/Customers';
 import Retailers from './pages/Retailers';
 import PrivateRoute from './components/PrivateRoute'; 
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/"  element={<Login/>} />
+      <Route path="/"  element={<LandingPage/>} />
+        <Route path="/login"  element={<Login/>} />
         <Route path="/dashboard" element={
              <PrivateRoute>
                   <DashboardLayout />
