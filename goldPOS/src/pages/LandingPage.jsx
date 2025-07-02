@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from '../css/LandingPage.module.css';
-import { useNavigate } from 'react-router-dom'; 
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ReviewSection from '../components/ReviewSection'
@@ -52,7 +51,6 @@ const plansData = [
 ];
 
 const LandingPage = () => {
-  const navigate = useNavigate();
   return (
     <>
     <Header/>
