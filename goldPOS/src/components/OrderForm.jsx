@@ -1,24 +1,28 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from "../css/Form.module.css"; 
+import axios from 'axios';
 
- const OrderForm = () => {
+ const OrderForm = ({ userId }) => {    
 
-      const goldItemNames = [
-        "Gold Ring",
-        "Gold Necklace",
-        "Gold Bracelet",
-        "Gold Earrings",
-        "Gold Pendant",
-        "Gold Chain",
-        "Gold Bangles",
-        "Gold Anklet",
-        "Gold Nose Pin",
-        "Gold Locket Set"
-      ];
-    
+    const defaultCategories = [
+    "Gold Ring",
+    "Gold Necklace",
+    "Gold Bracelet",
+    "Gold Earrings",
+    "Gold Pendant",
+    "Gold Chain",
+    "Gold Bangles",
+    "Gold Anklet",
+    "Gold Nose Pin",
+    "Gold Locket Set"
+  ];
+
+      const [customCategories, setCustomCategories] = useState([]);
+  const [itemName, setItemName] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [newCustomCategory, setNewCustomCategory] = useState('');
      
-      const [itemName, setItemName] = useState('');
       const [tagNumber, setTagNumber] = useState('');
       const [karat, setKarat] = useState('');
       const [quantity, setQuantity] = useState('');
@@ -30,22 +34,88 @@ import styles from "../css/Form.module.css";
       const [totalMaking, setTotalMaking] = useState('');
     //   const [description, setDescription] = useState('');
       
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => setCustomCategories(res.data))
+  .catch(err => {
+    console.error("Error fetching custom categories", err);
+    if (err.response) {
+      console.error("Server responded with:", err.response.data);
+    }
+  });
+}, [userId]);
+
+
+
   return (
     <div>
          <div className={styles.inputRow}>
              
                 
                 <div className={styles.inputGroup}>
-        
-                  <label htmlFor="itemName">Item Name</label>
-                  <select id="itemName" value={itemName} onChange={(e) => setItemName(e.target.value)}>
-                    <option value="">Select Item</option>
-                    {goldItemNames.map((item, index) => (
-                      <option key={index} value={item}>{item}</option>
-                    ))}
-                  </select>
-                </div>
-        
+  <label htmlFor="itemName">Item Name</label>
+  <select
+    id="itemName"
+    value={itemName}
+    onChange={(e) => {
+      if (e.target.value === "__custom__") {
+        setShowCustomInput(true);
+      } else {
+        setItemName(e.target.value);
+        setShowCustomInput(false);
+      }
+    }}
+  >
+    <option value="">Select Item</option>
+    {[...defaultCategories, ...customCategories].map((item, index) => (
+      <option key={index} value={item}>{item}</option>
+    ))}
+    <option value="__custom__">+ Add Custom Category</option>
+  </select>
+</div>
+
+{showCustomInput && (
+  <div className={styles.inputGroup}>
+    <label htmlFor="newCategory">New Category Name</label>
+    <input
+      type="text"
+      id="newCategory"
+      value={newCustomCategory}
+      onChange={(e) => setNewCustomCategory(e.target.value)}
+    />
+    <button
+      type="button"
+    onClick={() => {
+  const token = localStorage.getItem("token");
+  axios.post('http://localhost:5000/api/categories/custom', {
+    userId,
+    name: newCustomCategory
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(res => {
+    setCustomCategories(prev => [...prev, newCustomCategory]);
+    setItemName(newCustomCategory);
+    setNewCustomCategory('');
+    setShowCustomInput(false);
+  }).catch(err => {
+    console.error("Error saving category:", err);
+    if (err.response) {
+      console.error("Server responded with:", err.response.data);
+    }
+  });
+}}
+    >
+      Save Category
+    </button>
+  </div>
+)}
                 <div className={styles.inputGroup}>
                   <label htmlFor="tagNumber">Tag Number</label>
                   <input type="text" id="tagNumber" value={tagNumber} onChange={(e) => setTagNumber(e.target.value)} />

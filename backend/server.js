@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const categoryRoutes = require('./routes/categoryRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -62,6 +63,8 @@ app.get('/api/verify-token', async (req, res) => {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
 });
+
+app.use('/api/categories/custom', categoryRoutes);
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

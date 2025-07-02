@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
-        const res = await fetch('/api/verify-token', {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/verify-token`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

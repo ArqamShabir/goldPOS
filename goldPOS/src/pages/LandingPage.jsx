@@ -1,6 +1,11 @@
 import React from 'react';
 import styles from '../css/LandingPage.module.css';
 import { useNavigate } from 'react-router-dom'; 
+import Header from '../components/Header';
+import HeroSection from '../components/HeroSection';
+import ReviewSection from '../components/ReviewSection'
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer';
 
 const plansData = [
   {
@@ -50,13 +55,9 @@ const LandingPage = () => {
   const navigate = useNavigate();
   return (
     <>
-       <header className={styles.headerBar}>
-        <div className={styles.logoText}>AURICPOS</div>
-        <button className={styles.loginBtn} onClick={() => navigate('/login')}>
-          Login
-        </button>
-      </header>
-    <section className={styles.pricingSection}>
+    <Header/>
+    <HeroSection/>
+    <section className={styles.pricingSection} style={{padding:'80px 0'}} id='pricing'>
       <div className={styles.planHeader}>
         <h2>Choose Your Plan</h2>
       </div>
@@ -110,6 +111,9 @@ const LandingPage = () => {
         ))}
       </div>
     </section>
+    <ReviewSection/>
+    <FAQ/>
+    <Footer/>
         </>
   );
 };

@@ -6,13 +6,13 @@ import style from '../css/Login.module.css';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // 👈 for navigation
+  const navigate = useNavigate(); 
 
 const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch('/api/login', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })

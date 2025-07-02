@@ -15,24 +15,6 @@ body {
   margin-bottom: 20px;
 }
 
-.logoText {
-   text-align: center;
-  font-weight: bold;
-  color: #f5c960;
-  font-size: 1.4rem;
-}
-
-.loginBtn {
-  background: #f5c960;
-  border: none;
-  font-weight: bold;
-  color: #fff;
-  border-radius: 7px;
-  text-align: left;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  text-align: center;
-}
 
 .pricingSection {
   max-width: 1200px;

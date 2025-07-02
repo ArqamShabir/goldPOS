@@ -1,0 +1,49 @@
+.footer {
+  background-color: #dfb15b;
+  color: black;
+  padding: 40px 5% 20px;
+  bottom: 0;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;  
+}
+
+.left, .right {
+  margin: 10px;
+}
+.left{
+  max-width: 300px;
+}
+.left h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.right h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.right p, .left p {
+  margin: 8px 0;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+.bottom {
+  text-align: center;
+  font-size: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 15px;
+  margin-top: 20px;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+}
