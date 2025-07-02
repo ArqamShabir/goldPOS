@@ -82,4 +82,7 @@
   .headerNav{
     display: none;
   }
+  .header{
+      padding: 0.9375rem 1.125rem; 
+  }
 }

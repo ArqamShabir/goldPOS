@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from '../css/LandingPage.module.css';
 import Header from '../components/Header';
+import AboutUs from '../components/AboutUs';
 import HeroSection from '../components/HeroSection';
 import ReviewSection from '../components/ReviewSection'
 import FAQ from '../components/FAQ';
@@ -55,6 +56,7 @@ const LandingPage = () => {
     <>
     <Header/>
     <HeroSection/>
+    <AboutUs/>
     <section className={styles.pricingSection} style={{padding:'80px 0'}} id='pricing'>
       <div className={styles.planHeader}>
         <h2>Choose Your Plan</h2>

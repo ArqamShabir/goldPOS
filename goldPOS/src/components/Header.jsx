@@ -12,6 +12,7 @@ const Header = () => {
             <nav className={styles.headerNav}>
                 <ul>
                 <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
                 <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#testimonial">Testimonial</a></li>
                 <li><a href="#faq">FAQ</a></li>
