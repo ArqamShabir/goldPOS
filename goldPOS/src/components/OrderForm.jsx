@@ -92,7 +92,7 @@ useEffect(() => {
       type="button"
     onClick={() => {
   const token = localStorage.getItem("token");
-  axios.post('http://localhost:5000/api/categories/custom', {
+  axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
     userId,
     name: newCustomCategory
   }, {
