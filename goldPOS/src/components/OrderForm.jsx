@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import styles from "../css/Form.module.css"; 
 import axios from 'axios';
 
- const OrderForm = ({ userId }) => {    
-
-    const defaultCategories = [
+ const OrderForm = ({ userId }) => {  
+  
+  const defaultCategories = [
     "Gold Ring",
     "Gold Necklace",
     "Gold Bracelet",
@@ -18,37 +18,95 @@ import axios from 'axios';
     "Gold Locket Set"
   ];
 
-      const [customCategories, setCustomCategories] = useState([]);
+  const [customCategories, setCustomCategories] = useState([]);
   const [itemName, setItemName] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [newCustomCategory, setNewCustomCategory] = useState('');
      
-      const [tagNumber, setTagNumber] = useState('');
-      const [karat, setKarat] = useState('');
-      const [quantity, setQuantity] = useState('');
-      const [pieces, setPieces] = useState('');
-      const [waste, setWaste] = useState('');
-      const [totalWeight, setTotalWeight] = useState('');
-      const [price, setPrice] = useState('');
-      const [makingPerGram, setMakingPerGram] = useState('');
-      const [totalMaking, setTotalMaking] = useState('');
+  const [tagNumber, setTagNumber] = useState('');
+  const [karat, setKarat] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [pieces, setPieces] = useState('');
+  const [waste, setWaste] = useState('');
+  const [totalWeight, setTotalWeight] = useState('');
+  const [itemPrice, setItemPrice] = useState('');
+  const [makingPerGram, setMakingPerGram] = useState('');
+  const [totalMaking, setTotalMaking] = useState('');
     //   const [description, setDescription] = useState('');
-      
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+
+  const fetchNextTag = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/orders/next-tag`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTagNumber(res.data.nextTagNumber);
+    } catch (err) {
+      console.error("Error fetching next tag:", err);
     }
-  })
-  .then(res => setCustomCategories(res.data))
-  .catch(err => {
-    console.error("Error fetching custom categories", err);
-    if (err.response) {
-      console.error("Server responded with:", err.response.data);
+  };
+        
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(res => setCustomCategories(res.data))
+    .catch(err => {
+      console.error("Error fetching custom categories", err);
+      if (err.response) {
+        console.error("Server responded with:", err.response.data);
+      }
+    });
+
+      fetchNextTag();
+  }, [userId]);
+
+
+ const postOrder = async () => {
+    try{
+      const token = localStorage.getItem("token"); 
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/orders`, {
+        itemName,
+        karat,
+        quantity,
+        pieces,
+        waste,
+        totalWeight,
+        itemPrice,
+        makingPerGram,
+        totalMaking
+      }, {
+      headers: {
+        Authorization: `Bearer ${token}` // optional, only if protected
+      }}
+    );
+
+      if (response.status === 201) {
+        alert("Order item submitted successfully!");
+        setItemName('');
+        setTagNumber('');
+        setKarat('');
+        setQuantity('');
+        setPieces('');
+        setWaste('');
+        setTotalWeight('');
+        setItemPrice('');
+        setMakingPerGram('');
+        setTotalMaking('');
+        fetchNextTag();
+      }
+
+      }catch(error){
+        console.error("Error submitting order:", error);
+        if (error.response) {
+          alert(`Error: ${error.response.data.message}`);
+        }
     }
-  });
-}, [userId]);
+    
+  }
 
 
 
@@ -57,68 +115,65 @@ useEffect(() => {
          <div className={styles.inputRow}>
              
                 
-                <div className={styles.inputGroup}>
-  <label htmlFor="itemName">Item Name</label>
-  <select
-    id="itemName"
-    value={itemName}
-    onChange={(e) => {
-      if (e.target.value === "__custom__") {
-        setShowCustomInput(true);
-      } else {
-        setItemName(e.target.value);
-        setShowCustomInput(false);
-      }
-    }}
-  >
-    <option value="">Select Item</option>
-    {[...defaultCategories, ...customCategories].map((item, index) => (
-      <option key={index} value={item}>{item}</option>
-    ))}
-    <option value="__custom__">+ Add Custom Category</option>
-  </select>
-</div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="itemName">Item Name</label>
+              <select id="itemName" value={itemName}
+                onChange={(e) => {
+                  if (e.target.value === "__custom__") {
+                    setShowCustomInput(true);
+                  } else {
+                    setItemName(e.target.value);
+                    setShowCustomInput(false);
+                  }
+                }}
+              >
+                <option value="">Select Item</option>
+                {[...defaultCategories, ...customCategories].map((item, index) => (
+                  <option key={index} value={item}>{item}</option>
+                ))}
+                <option value="__custom__">+ Add Custom Category</option>
+              </select>
+            </div>
 
-{showCustomInput && (
-  <div className={styles.inputGroup}>
-    <label htmlFor="newCategory">New Category Name</label>
-    <input
-      type="text"
-      id="newCategory"
-      value={newCustomCategory}
-      onChange={(e) => setNewCustomCategory(e.target.value)}
-    />
-    <button
-      type="button"
-    onClick={() => {
-  const token = localStorage.getItem("token");
-  axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
-    userId,
-    name: newCustomCategory
-  }, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }).then(res => {
-    setCustomCategories(prev => [...prev, newCustomCategory]);
-    setItemName(newCustomCategory);
-    setNewCustomCategory('');
-    setShowCustomInput(false);
-  }).catch(err => {
-    console.error("Error saving category:", err);
-    if (err.response) {
-      console.error("Server responded with:", err.response.data);
-    }
-  });
-}}
-    >
-      Save Category
-    </button>
-  </div>
-)}
+            {showCustomInput && (
+              <div className={styles.inputGroup}>
+                <label htmlFor="newCategory">New Category Name</label>
+                <input
+                  type="text"
+                  id="newCategory"
+                  value={newCustomCategory}
+                  onChange={(e) => setNewCustomCategory(e.target.value)}
+                />
+                <button
+                  type="button"
+                onClick={() => {
+              const token = localStorage.getItem("token");
+              axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
+                userId,
+                name: newCustomCategory
+              }, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }).then(res => {
+                setCustomCategories(prev => [...prev, newCustomCategory]);
+                setItemName(newCustomCategory);
+                setNewCustomCategory('');
+                setShowCustomInput(false);
+              }).catch(err => {
+                console.error("Error saving category:", err);
+                if (err.response) {
+                  console.error("Server responded with:", err.response.data);
+                }
+              });
+            }}
+                > Save Category </button>
+              </div>
+            )}
+
                 <div className={styles.inputGroup}>
                   <label htmlFor="tagNumber">Tag Number</label>
-                  <input type="text" id="tagNumber" value={tagNumber} onChange={(e) => setTagNumber(e.target.value)} />
+                  <input type="text" id="tagNumber" value={tagNumber} onChange={(e) => setTagNumber(e.target.value)} readOnly />
                 </div>
         
                 <div className={styles.inputGroup}>
@@ -143,7 +198,7 @@ useEffect(() => {
         
                 <div className={styles.inputGroup}>
                   <label htmlFor="price">Item Price (PKR)</label>
-                  <input type="number" id="price" value={price} min="1" onChange={(e) => { const value = e.target.value;if (value === '' || Number(value) >= 0) {setPrice(value);}}} />
+                  <input type="number" id="price" value={itemPrice} min="1" onChange={(e) => { const value = e.target.value;if (value === '' || Number(value) >= 0) {setItemPrice(value);}}} />
                 </div>
         
                 <div className={styles.inputGroup}>
@@ -177,7 +232,7 @@ useEffect(() => {
               </div>
         
               <div className={styles.buttonRow}>
-                <button type="button" className={styles.submitButton} onClick={() => { alert("Gold item submitted successfully!"); }}> Submit </button>
+                <button type="button" className={styles.submitButton} onClick={postOrder}> Submit </button>
               </div>
         
 

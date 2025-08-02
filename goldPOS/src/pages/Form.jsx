@@ -6,7 +6,12 @@ import OrderForm from "../components/OrderForm";
 const Form = () => {
 
   const [formType, setFormType] = useState("Stock");
-  const [date, setDate] = useState('');
+
+  const [date, setDate] = useState(() => {
+  const today = new Date();
+  return today.toISOString().split("T")[0]; 
+});
+
  
   return (
     <div className={styles.formContainer}>
@@ -25,10 +30,15 @@ const Form = () => {
               </div>
 
               <div className={styles.dateContainer}>
-                <input type="date" id="date" className={styles.dateInput} value={date} onChange={(e) => setDate(e.target.value)} />
+                <input
+                  type="date"
+                  id="date"
+                  className={styles.dateInput}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  readOnly
+                />
               </div>
-
-
 
         </div>
 

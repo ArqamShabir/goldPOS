@@ -5,6 +5,8 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const categoryRoutes = require('./routes/categoryRoutes');
+const orderRoutes = require('./routes/orderRoutes')
+const stockRoutes = require('./routes/stockRoutes')
 require('dotenv').config();
 
 const app = express();
@@ -65,6 +67,10 @@ app.get('/api/verify-token', async (req, res) => {
 });
 
 app.use('/api/categories/custom', categoryRoutes);
+
+app.use('/api/orders', orderRoutes);
+
+app.use('/api/stocks', stockRoutes);
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
