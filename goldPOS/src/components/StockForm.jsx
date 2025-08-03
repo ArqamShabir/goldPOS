@@ -180,7 +180,7 @@ import axios from 'axios';
   
           <div className={styles.inputGroup}>
             <label htmlFor="tagNumber">Tag Number</label>
-            <input type="text" id="tagNumber" value={tagNumber} onChange={(e) => setTagNumber(e.target.value)} />
+            <input type="text" id="tagNumber" readOnly value={tagNumber} onChange={(e) => setTagNumber(e.target.value)} />
           </div>
   
           <div className={styles.inputGroup}>

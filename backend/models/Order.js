@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   itemName: { type: String, required: true },
+  customerName: { type: String, required: true },
   tagNumber: { type: String, required: true, unique: true },
   karat: {type: Number, required: true, min: 0,       
     validate: {  
@@ -27,6 +29,12 @@ const OrderSchema = new mongoose.Schema({
   totalWeight: {type: Number, required: true , min: 0  },
   makingPerGram: {type: Number, required: true , min: 0},
   totalMaking: {type: Number , required: true , min: 0},
+  status: {
+    type: String,
+    required: true,
+    enum: ['Pending', 'Complete'],
+    default: 'Pending'
+  },
   date: {
           type: String,
           default: () => {

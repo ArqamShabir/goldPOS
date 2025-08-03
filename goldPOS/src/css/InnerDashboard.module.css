@@ -158,7 +158,36 @@
     font-weight: 500;
     color: #888;
   }
-  
+  .loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loadingText {
+  color: #888;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #dfb15b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
   @media (max-width:768px) {
     

@@ -74,4 +74,15 @@ router.post('/', authenticateUser, async (req, res) => {
   }
 });
 
+router.get('/getStocks' , authenticateUser , async (req,res)=>{
+  try{
+    const userId = req.userId
+    const stocks = await Stock.find({userId : userId}).sort({createdAt:-1})
+    res.status(200).send({stocks})
+  }catch(error){
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
+
 module.exports = router;

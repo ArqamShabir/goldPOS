@@ -32,6 +32,7 @@ import axios from 'axios';
   const [itemPrice, setItemPrice] = useState('');
   const [makingPerGram, setMakingPerGram] = useState('');
   const [totalMaking, setTotalMaking] = useState('');
+  const [customerName , setCustomerName] = useState('')
     //   const [description, setDescription] = useState('');
 
   const fetchNextTag = async () => {
@@ -77,7 +78,8 @@ import axios from 'axios';
         totalWeight,
         itemPrice,
         makingPerGram,
-        totalMaking
+        totalMaking,
+        customerName
       }, {
       headers: {
         Authorization: `Bearer ${token}` // optional, only if protected
@@ -97,6 +99,7 @@ import axios from 'axios';
         setMakingPerGram('');
         setTotalMaking('');
         fetchNextTag();
+        setCustomerName('')
       }
 
       }catch(error){
@@ -222,10 +225,10 @@ import axios from 'axios';
                   <input type="number" id="totalMaking" min="0"  value={totalMaking} onChange={(e) => {const value = e.target.value;if (value === '' || Number(value) >= 0) { setTotalMaking(value);}}} />
                 </div>
         
-                {/* <div className={styles.inputGroup}>
-                    <label htmlFor="description">Description</label>
-                    <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={1} />
-                </div> */}
+                <div className={styles.inputGroup}>
+                    <label htmlFor="customerName">Customer Name</label>
+                    <textarea id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} rows={1} />
+                </div>
         
         
         

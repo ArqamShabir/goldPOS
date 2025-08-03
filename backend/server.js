@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const categoryRoutes = require('./routes/categoryRoutes');
 const orderRoutes = require('./routes/orderRoutes')
 const stockRoutes = require('./routes/stockRoutes')
+const userRoutes = require('./routes/userRoutes')
+
 require('dotenv').config();
 
 const app = express();
@@ -72,5 +74,6 @@ app.use('/api/orders', orderRoutes);
 
 app.use('/api/stocks', stockRoutes);
 
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

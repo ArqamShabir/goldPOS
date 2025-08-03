@@ -45,7 +45,8 @@ router.post('/', authenticateUser, async (req, res) => {
       totalWeight,
       itemPrice,
       makingPerGram,
-      totalMaking
+      totalMaking,
+      customerName
     } = req.body;
 
     const newOrder = new Order({
@@ -59,7 +60,8 @@ router.post('/', authenticateUser, async (req, res) => {
       totalWeight,
       itemPrice,
       makingPerGram,
-      totalMaking
+      totalMaking,
+      customerName
     });
 
     await newOrder.save();
@@ -71,5 +73,18 @@ router.post('/', authenticateUser, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+router.get('/getOrders', authenticateUser , async (req,res)=>{
+  try {
+    const userId = req.userId;
+
+    const orders = await Order.find({ userId: userId }).sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
 
 module.exports = router;

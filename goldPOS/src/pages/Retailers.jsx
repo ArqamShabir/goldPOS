@@ -1,75 +1,73 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "../css/InnerDashboard.module.css";
+import axios from 'axios';
 
 export default function Retailers() {
-  const dummySales = [
-    {
-      id: "01015",
-      datetime: "2025-05-20 22:00",
-      type: "Rings",
-      customer: "Masud Rana",
-      status: "Complete",
-      amount: 250,
-    },
-    {
-      id: "01016",
-      datetime: "2025-05-01 20:30",
-      type: "Chains",
-      customer: "Masud Rana",
-      status: "Pending",
-      amount: 180,
-    },
-    {
-      id: "01017",
-      datetime: "2025-05-23 15:15",
-      type: "Set",
-      customer: "Masud Rana",
-      status: "Complete",
-      amount: 300,
-    },
-  ];
+  const [stocks, setStocks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [sales, setSales] = useState(dummySales);
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    phoneNumber: "",
-    email: "",
-    registerationDate: "",
-  });
+  useEffect(()=>{
+    const fetchStock = async () => {
+      try{
+        setLoading(true);
+        setError(null)
 
-  useEffect(() => {
-    setUserInfo({
-      name: "Ali Ali",
-      phoneNumber: "3232322234",
-      email: "example@gmail.com",
-      registerationDate: "22/6/25",
-    });
-  }, []);
+        const token = localStorage.getItem('token')
+
+        if (!token) {
+          throw new Error("Please log in.");
+        }
+
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/stocks/getStocks`,{
+          headers:{
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        setStocks(response.data.stocks); 
+      }catch(err){
+        console.error("Error fetching stocks:", err);
+        if (err.response) {
+          setError(err.response.data.message || `Server responded with status: ${err.response.status}`);
+        } else if (err.request) {
+          setError("Please check your internet connection.");
+        } else {
+          setError(err.message);
+        }
+      }finally {
+        setLoading(false);
+      }
+    }
+
+    fetchStock()
+  },[])
 
   const filters = ["All", "Monthly", "Weekly", "Today"];
   const [currentFilter, setCurrentFilter] = useState("All");
 
   const handleFilter = (filter) => setCurrentFilter(filter);
 
-  const filteredSales = useMemo(() => {
+  const filteredStocks = useMemo(() => {
     const today = new Date();
-    let result = sales;
+    let result = stocks;
 
     if (currentFilter === "Today") {
-      result = sales.filter((item) => {
-        const saleDate = new Date(item.datetime);
+      result = stocks.filter((item) => {
+        const saleDate = new Date(item.createdAt); 
         return saleDate.toDateString() === today.toDateString();
       });
     } else if (currentFilter === "Weekly") {
-      const week = new Date();
-      week.setDate(today.getDate() - 7);
-      result = sales.filter((item) => {
-        const saleDate = new Date(item.datetime);
-        return saleDate >= week && saleDate <= today;
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(today.getDate() - 7);
+      result = stocks.filter((item) => {
+        const saleDate = new Date(item.createdAt);
+        return saleDate >= oneWeekAgo && saleDate <= today;
       });
     } else if (currentFilter === "Monthly") {
-      result = sales.filter((item) => {
-        const saleDate = new Date(item.datetime);
+      result = stocks.filter((item) => {
+        const saleDate = new Date(item.createdAt);
         return (
           saleDate.getMonth() === today.getMonth() &&
           saleDate.getFullYear() === today.getFullYear()
@@ -78,11 +76,10 @@ export default function Retailers() {
     }
 
     return result;
-  }, [currentFilter, sales]);
+  }, [currentFilter, stocks]);
 
   return (
     <div className={styles.container}>
-
       <div className={styles.header}>
         <h2 className={styles.title}>Retailers</h2>
         <div className={styles.filters}>
@@ -99,49 +96,60 @@ export default function Retailers() {
           ))}
         </div>
       </div>
-
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Date/Time</th>
-              <th>Type</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSales.length === 0 ? (
+      
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Loading stocks...</p>
+        </div>
+      ) : error ? (
+        <div className={styles.errorContainer}>
+          <p>{error}</p>
+        </div>
+      ) : (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
               <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "1rem" }}>
-                  No sales found
-                </td>
+                <th>Tag Number</th>
+                <th>Date</th>
+                <th>Item Name</th>
+                <th>Total Weight</th>
+                <th>Item Price</th>
+                <th>Status</th>
               </tr>
-            ) : (
-              filteredSales.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.datetime}</td>
-                  <td>{item.type}</td>
-                  <td>{item.customer}</td>
-                  <td>
-                    <span
-                      className={`${styles.status} ${
-                        styles[item.status.toLowerCase()]
-                      }`}
-                    >
-                      {item.status}
-                    </span>
+            </thead>
+            <tbody>
+              {filteredStocks.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center", padding: "1rem" }}>
+                    No stocks found
                   </td>
-                  <td>${item.amount}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : (
+                filteredStocks.map((item) => (
+                  <tr key={item.tagNumber}>
+                    <td>{item.tagNumber}</td>
+                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                    <td>{item.itemName}</td>
+                    <td>{item.totalWeight}g</td>
+                    <td>PKR {item.itemPrice}</td>
+                    <td>
+                      <span
+                        className={`${styles.status} ${
+                          styles[item.status.toLowerCase()]
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

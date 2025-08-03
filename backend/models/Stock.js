@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const StockSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Add this line
   itemName: { type: String, required: true },
   tagNumber: { type: String, required: true, unique: true },
   karat: {type: Number, required: true, min: 0,       
@@ -28,6 +29,12 @@ const StockSchema = new mongoose.Schema({
   makingPerGram: {type: Number, required: true , min: 0},
   totalMaking: {type: Number , required: true , min: 0},
   description: {type: String , required: true},
+  status: { 
+    type: String,
+    required: true,
+    enum: ['Pending', 'Complete'],
+    default: 'Pending'
+  },
   date: {
           type: String,
           default: () => {
