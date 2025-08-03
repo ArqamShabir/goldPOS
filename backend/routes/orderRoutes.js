@@ -8,12 +8,12 @@ router.get('/next-tag', authenticateUser, async (req, res) => {
   try {
     const lastOrder = await Order.findOne().sort({ createdAt: -1 });
 
-    let nextTagNumber = "TAG001";
+    let nextTagNumber = "OR_TAG001";
 
     if (lastOrder && lastOrder.tagNumber) {
-      const lastNumber = parseInt(lastOrder.tagNumber.replace("TAG", "")) || 0;
+      const lastNumber = parseInt(lastOrder.tagNumber.replace("OR_TAG", "")) || 0;
       const newNumber = lastNumber + 1;
-      nextTagNumber = `TAG${String(newNumber).padStart(3, '0')}`;
+      nextTagNumber = `OR_TAG${String(newNumber).padStart(3, '0')}`;
     }
 
     res.json({ nextTagNumber });
@@ -28,12 +28,12 @@ router.post('/', authenticateUser, async (req, res) => {
   try {
     const lastOrder = await Order.findOne().sort({ createdAt: -1 });
 
-    let newTagNumber = "TAG001";
+    let newTagNumber = "OR_TAG001";
 
     if (lastOrder && lastOrder.tagNumber) {
-      const lastNumber = parseInt(lastOrder.tagNumber.replace("TAG", "")) || 0;
+      const lastNumber = parseInt(lastOrder.tagNumber.replace("OR_TAG", "")) || 0;
       const nextNumber = lastNumber + 1;
-      newTagNumber = `TAG${String(nextNumber).padStart(3, '0')}`;
+      newTagNumber = `OR_TAG${String(nextNumber).padStart(3, '0')}`;
     }
 
     const {

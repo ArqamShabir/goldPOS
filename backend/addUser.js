@@ -9,8 +9,8 @@ const addUser = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     const username = 'gift@gmail.com';
     const password = 'admin123';
-    // const name = 'Ali Ali';
-    // const phoneNumber = '03222345678'
+    const name = 'Ali Ali';
+    const phoneNumber = '03222345678'
 
     const hash = await bcrypt.hash(password, 10);
     const user = new User({ username, password: hash, name , phoneNumber });

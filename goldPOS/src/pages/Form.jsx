@@ -18,7 +18,7 @@ const Form = () => {
 
         <div className={styles.formRow}>
 
-            <div className={styles.stockLabel}>Stock# 2314</div>
+            {/* <div className={styles.stockLabel}>Stock# 2314</div> */}
 
               <div  className={styles.radioContainer}>
                 
