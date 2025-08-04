@@ -32,6 +32,16 @@
   z-index: 999;
 }
 
+.formTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #edaa2e;
+  padding-bottom: 1rem;
+}
+
 .formRow {
   display: flex;
   justify-content:flex-start;
@@ -92,6 +102,12 @@
   outline-color: #dfb15b;
 }
 
+.inputGroup input[readonly],
+.inputGroup textarea[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
 .inputGroup textarea {
   padding: 0.6rem 1rem;
   font-size: 1rem;
@@ -113,6 +129,7 @@
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+  gap: 1rem;
 }
 
 .submitButton {
@@ -141,6 +158,21 @@
   border-radius: 0.5rem;
   outline-color: #dfb15b;
   background-color: #fff;
+}
+
+.cancelButton {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background-color: #ccc;
+  border: none;
+  border-radius: 0.5rem;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #b3b3b3;
 }
 
 

@@ -85,4 +85,28 @@ router.get('/getStocks' , authenticateUser , async (req,res)=>{
   }
 })
 
+router.put('/:stockId', authenticateUser , async (req,res)=>{
+  try{
+
+    const stockId = req.params.stockId;
+    const formData = req.body;
+
+    const updatedStock = await Stock.findByIdAndUpdate(
+      stockId,
+      formData,
+      {new:true}
+    )
+
+    if (!updatedStock) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json(updatedStock);
+
+  }catch(error){
+    console.error('Error updating stock:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+})
+
 module.exports = router;
