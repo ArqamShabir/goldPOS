@@ -11,6 +11,81 @@
       box-sizing: border-box;
       scroll-behavior: smooth;
     }
+    /* Modal Overlay (background) */
+.custom-overlay {
+  background-color: rgba(0, 0, 0, 0.6); /* semi-transparent black */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+/* Modal Box */
+.custom-modal {
+  background: #fff;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Scrollable list */
+.custom-modal ul {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+/* Each list item */
+.custom-modal li {
+  margin-bottom: 0.5rem;
+}
+
+/* Checkbox + label */
+.custom-modal input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Buttons */
+.custom-modal button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+/* Primary button (Delete) */
+.custom-modal button:first-of-type {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.custom-modal button:first-of-type:disabled {
+  background-color: #f5b7b1;
+  cursor: not-allowed;
+}
+
+/* Secondary button (Cancel) */
+.custom-modal button:last-of-type {
+  background-color: #edaa2e;
+  color: white;
+}
+
   </style>
   <body>
     <div id="root"></div>

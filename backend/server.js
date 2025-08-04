@@ -94,8 +94,6 @@ app.get('/api/verify-token', async (req, res) => {
   }
 });
 
-
-
 app.use('/api/categories/custom', categoryRoutes);
 
 app.use('/api/orders', orderRoutes);

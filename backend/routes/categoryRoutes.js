@@ -36,4 +36,25 @@ router.post('/', authenticateUser, async (req, res) => {
   }
 });
 
+router.delete('/', authenticateUser, async (req, res) => {
+  const { names } = req.body;
+
+  if (!Array.isArray(names) || names.length === 0) {
+    return res.status(400).json({ message: 'No categories selected for deletion' });
+  }
+
+  try {
+    const result = await CustomCategory.deleteMany({
+      userId: req.userId,
+      name: { $in: names }
+    });
+
+    res.status(200).json({ message: 'Deleted', deletedCount: result.deletedCount });
+  } catch (err) {
+    console.error("Error deleting categories:", err);
+    res.status(500).json({ message: 'Server error during deletion' });
+  }
+});
+
+
 module.exports = router;

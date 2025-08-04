@@ -7,7 +7,9 @@ import Customers from './pages/Customers';
 import Retailers from './pages/Retailers';
 import PrivateRoute from './components/PrivateRoute'; 
 import LandingPage from './pages/LandingPage';
-import PaymentPage from './pages/PaymentPage';
+import PaymentPage from './pages/PaymentPage'
+import Modal from 'react-modal';
+Modal.setAppElement('#root');
 
 function App() {
   return (

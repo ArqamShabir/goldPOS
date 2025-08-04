@@ -2,12 +2,12 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import styles from "../css/Form.module.css"; 
 import axios from 'axios';
+import Modal from 'react-modal';
 
  const StockForm = ({userId}) =>{
 
     const defaultCategories = [
-      "Gold Ring", "Gold Necklace", "Gold Bracelet", "Gold Earrings", "Gold Pendant", "Gold Chain",
-      "Gold Bangles","Gold Anklet", "Gold Nose Pin", "Gold Locket Set"
+      "Gold Ring", "Gold Necklace"
     ]  ;
 
     const [customCategories, setCustomCategories] = useState([]);
@@ -103,7 +103,29 @@ import axios from 'axios';
         fetchNextTag();
     }, [userId]);
   
-       
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [selectedToDelete, setSelectedToDelete] = useState([]);
+
+const toggleDeleteModal = () => {
+  setSelectedToDelete([]);
+  setShowDeleteModal(prev => !prev);
+};
+
+const handleDeleteSelected = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { names: selectedToDelete }
+    });
+
+    setCustomCategories(prev => prev.filter(name => !selectedToDelete.includes(name)));
+    setShowDeleteModal(false);
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert("Failed to delete selected categories.");
+  }
+};
 
   return (
     <div>
@@ -112,22 +134,67 @@ import axios from 'axios';
                
             <div className={styles.inputGroup}>
               <label htmlFor="itemName">Item Name</label>
-              <select id="itemName" value={itemName}
-                onChange={(e) => {
-                  if (e.target.value === "__custom__") {
-                    setShowCustomInput(true);
-                  } else {
-                    setItemName(e.target.value);
-                    setShowCustomInput(false);
-                  }
-                }}
-              >
-                <option value="">Select Item</option>
-                {[...defaultCategories, ...customCategories].map((item, index) => (
-                  <option key={index} value={item}>{item}</option>
-                ))}
-                <option value="__custom__">+ Add Custom Category</option>
-              </select>
+<select id="itemName" value={itemName}
+  onChange={(e) => {
+    if (e.target.value === "__custom__") {
+      setShowCustomInput(true);
+    } else if (e.target.value === "__custom__del") {
+      toggleDeleteModal();
+    } else {
+      setItemName(e.target.value);
+      setShowCustomInput(false);
+    }
+  }}
+>
+  <option value="">Select Item</option>
+  {[...defaultCategories, ...customCategories].map((item, index) => (
+    <option key={index} value={item}>{item}</option>
+  ))}
+  <option value="__custom__">+ Add Custom Category</option>
+  <option value="__custom__del">Delete Categories</option>
+</select>
+
+<Modal
+  isOpen={showDeleteModal}
+  onRequestClose={() => setShowDeleteModal(false)}
+  contentLabel="Delete Categories"
+  className="custom-modal"
+  overlayClassName="custom-overlay"
+>
+  <h2 style={{ marginBottom: '1rem' }}>Delete Categories</h2>
+  {customCategories.length === 0 ? (
+    <p>No custom categories available.</p>
+  ) : (
+    <ul style={{ listStyle: 'none', padding: 0, maxHeight: '200px', overflowY: 'auto' }}>
+      {customCategories.map((cat, index) => (
+        <li key={index}>
+          <label>
+            <input
+              type="checkbox"
+              value={cat}
+              checked={selectedToDelete.includes(cat)}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setSelectedToDelete(prev => [...prev, cat]);
+                } else {
+                  setSelectedToDelete(prev => prev.filter(name => name !== cat));
+                }
+              }}
+            />
+            {cat}
+          </label>
+        </li>
+      ))}
+    </ul>
+  )}
+  <div style={{ marginTop: '1rem' }}>
+    <button onClick={handleDeleteSelected} disabled={selectedToDelete.length === 0} style={{ marginRight: '1rem' }}>
+      Delete Selected
+    </button>
+    <button onClick={() => setShowDeleteModal(false)}>Cancel</button>
+  </div>
+</Modal>
+
             </div>
 
             {showCustomInput && (
@@ -248,4 +315,4 @@ import axios from 'axios';
   )
 }
 
-export default StockForm
+export default StockForm;
