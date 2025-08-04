@@ -2,12 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "../css/InnerDashboard.module.css";
 import jsPDF from "jspdf"; 
 import axios from 'axios';
+import OrderDetailsModal from "../components/OrderDetailsModal.jsx"; 
+
+
+
 
 export default function Customers() {
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -96,7 +101,13 @@ export default function Customers() {
     doc.text(`Status: ${item.status}`, 3, 33); 
 
     doc.save(`tag-${item.tagNumber}.pdf`);
+
   };
+
+  
+    const openModal = (order) => {
+      setSelectedOrder(order);
+    };
 
 
   return (
@@ -151,7 +162,7 @@ export default function Customers() {
               </tr>
             ) : (
               filteredOrders.map((item) => (
-                <tr key={item.tagNumber}>
+                <tr key={item.tagNumber} onClick={() => openModal(item)} style={{ cursor: "pointer" }} >
                   <td>{item.tagNumber}</td>
                   <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                   <td>{item.customerName}</td>
@@ -179,6 +190,18 @@ export default function Customers() {
         </table>
       </div>
     )}
+
+      <OrderDetailsModal
+        order={selectedOrder}
+        isOpen={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
+
+
   </div>
+
+
+
+  
   );
 }
