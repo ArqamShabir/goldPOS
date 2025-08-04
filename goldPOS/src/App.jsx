@@ -7,6 +7,7 @@ import Customers from './pages/Customers';
 import Retailers from './pages/Retailers';
 import PrivateRoute from './components/PrivateRoute'; 
 import LandingPage from './pages/LandingPage';
+import PaymentPage from './pages/PaymentPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
       <Route path="/"  element={<LandingPage/>} />
         <Route path="/login"  element={<Login/>} />
+        <Route path="/payment" element={<PaymentPage />} />
         <Route path="/dashboard" element={
              <PrivateRoute>
                   <DashboardLayout />

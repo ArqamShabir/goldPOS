@@ -6,6 +6,7 @@ import HeroSection from '../components/HeroSection';
 import ReviewSection from '../components/ReviewSection'
 import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const plansData = [
   {
@@ -52,6 +53,8 @@ const plansData = [
 ];
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
     <Header/>
@@ -102,11 +105,13 @@ const LandingPage = () => {
               </ul>
             </div>
 
-            <button
-              className={`${styles.chooseBtn} ${plan.highlight ? styles.highlightedButton : ''}`}
-            >
-              Choose Plan
-            </button>
+           <button
+  className={`${styles.chooseBtn} ${plan.highlight ? styles.highlightedButton : ''}`}
+  onClick={() => navigate('/payment', { state: { plan } })}
+>
+  Choose Plan
+</button>
+
           </div>
         ))}
       </div>

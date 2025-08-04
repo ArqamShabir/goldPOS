@@ -1,0 +1,46 @@
+.wrapper {
+  padding: 40px;
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  font-family: sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #f9f9f9;
+}
+
+.heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.paymentForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.paymentForm input {
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.paymentForm button {
+  padding: 12px;
+  background: #f5c960;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.paymentForm button:hover {
+  background: #f5c964;
+}
