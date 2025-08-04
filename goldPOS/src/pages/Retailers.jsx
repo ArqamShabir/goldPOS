@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "../css/InnerDashboard.module.css";
 import axios from 'axios';
+import StockDetailsModal from "../components/StockDetailsModal.jsx";
 
 export default function Retailers() {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedStock, setSelectedStock] = useState(null);
+
 
   useEffect(()=>{
     const fetchStock = async () => {
@@ -78,6 +81,11 @@ export default function Retailers() {
     return result;
   }, [currentFilter, stocks]);
 
+  const openModal = (stock) => {
+  setSelectedStock(stock);
+};
+
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -128,7 +136,7 @@ export default function Retailers() {
                 </tr>
               ) : (
                 filteredStocks.map((item) => (
-                  <tr key={item.tagNumber}>
+                  <tr key={item.tagNumber} onClick={() => openModal(item)} style={{ cursor: "pointer" }} >
                     <td>{item.tagNumber}</td>
                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td>{item.itemName}</td>
@@ -150,6 +158,15 @@ export default function Retailers() {
           </table>
         </div>
       )}
+
+      <StockDetailsModal
+        stock={selectedStock}
+        isOpen={!!selectedStock}
+        onClose={() => setSelectedStock(null)}
+      />
+
     </div>
+
+    
   );
 }

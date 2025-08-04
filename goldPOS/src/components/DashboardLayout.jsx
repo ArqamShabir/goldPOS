@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from '../css/Sidebar.module.css'; 
+import { Home as HomeIcon, FilePlus, Store, Users } from "lucide-react";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,22 +28,22 @@ const DashboardLayout = () => {
           <ul>
             <li>
               <NavLink to="/dashboard"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
-                🏠 Home
+                <HomeIcon size={16}  style={{ marginRight: "6px", verticalAlign: "middle" }}/>  Home
               </NavLink>
             </li>
             <li>
               <NavLink to="record"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
-                ⚙️ Create Record
+                <FilePlus size={16} style={{ marginRight: "6px", verticalAlign: "middle" }}/> Create Record
               </NavLink>
             </li>
             <li>
               <NavLink to="customers"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
-                👤 Customers
+                <Users size={16} style={{ marginRight: "6px", verticalAlign: "middle" }}/> Customers
               </NavLink>
             </li>
             <li>
               <NavLink to="retailers"  onClick={handleCloseSidebar} className={({ isActive }) => isActive ? styles.active : ''}>
-                ⚙️ Retailers
+                 <Store size={16} style={{ marginRight: "6px", verticalAlign: "middle" }} /> Retailers
               </NavLink>
             </li>
               <button onClick={handleLogout} className={styles.logoutBtn}>
