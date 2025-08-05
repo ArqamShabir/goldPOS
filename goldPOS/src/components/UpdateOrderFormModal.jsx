@@ -329,7 +329,7 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
       </div>
 
       <div className={formStyles.buttonRow}>
-        <button type="button" className={formStyles.submitButton} onClick={updateOrder}>Update Order</button>
+        <button type="button" className={formStyles.submitButton} onClick={updateOrder}>Update</button>
         <button type="button" className={formStyles.cancelButton} onClick={onClose}>Cancel</button>
       </div>
     </Modal>

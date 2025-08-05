@@ -324,7 +324,7 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
       </div>
 
       <div className={formStyles.buttonRow}>
-        <button type="button" className={formStyles.submitButton} onClick={updateStock}>Update Stock</button>
+        <button type="button" className={formStyles.submitButton} onClick={updateStock}>Update</button>
         <button type="button" className={formStyles.cancelButton} onClick={onClose}>Cancel</button>
       </div>
     </Modal>

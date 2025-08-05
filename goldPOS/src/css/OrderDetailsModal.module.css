@@ -20,6 +20,9 @@
   border: 1px solid #facc15;
   outline: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* Added these styles to make the modal responsive and scrollable */
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modalTitle {
@@ -56,10 +59,14 @@
   font-size: 14px;
   font-weight: 500;
   color: #6b7280;
-  /* This is the key change to ensure text wraps correctly, especially for long words. */
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-all;
+}
+
+/* This is the new class for the description field to give it a full width */
+.fullWidthField {
+  grid-column: 1 / -1;
 }
 
 .closeButton {
@@ -78,13 +85,9 @@
   background-color: #fbbf24;
 }
 
-.fullWidthField {
-  grid-column: 1 / -1;
-}
-
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .modalGrid {
     grid-template-columns: 1fr;
   }
 }
-
