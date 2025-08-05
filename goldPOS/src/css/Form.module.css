@@ -158,6 +158,8 @@
   border-radius: 0.5rem;
   outline-color: #dfb15b;
   background-color: #fff;
+  background-color: #f0f0f0;
+  cursor: not-allowed;
 }
 
 .cancelButton {
@@ -173,6 +175,42 @@
 
 .cancelButton:hover {
   background-color: #b3b3b3;
+}
+
+
+.inputError {
+  border-color: #c62828; /* A darker red for the border */
+}
+
+.inputError:focus {
+  outline-color: #c62828;
+}
+
+.errorText {
+  color: #c62828;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.errorMessage {
+  background-color: #fcebeb;
+  color: #c62828;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.successMessage {
+  background-color: #d4f8e8;
+  color: #2e7d32;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
 }
 
 

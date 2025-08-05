@@ -71,6 +71,16 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
             </span>
           </div>
         )}
+
+        {order.updatedAt && (
+          <div className={styles.field}>
+            <span className={styles.attrLabel}>Updated At</span>
+            <span className={styles.attrValue}>
+              {new Date(order.updatedAt).toLocaleString()}
+            </span>
+          </div>
+        )}
+        
       </div>
 
       <button onClick={onClose} className={styles.closeButton}>
