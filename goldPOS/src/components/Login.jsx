@@ -6,10 +6,14 @@ import style from '../css/Login.module.css';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); 
 
 const handleLogin = async (e) => {
   e.preventDefault();
+    if (loading) return;
+
+    setLoading(true);
 
   try {
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/login`, {
@@ -29,7 +33,9 @@ const handleLogin = async (e) => {
   } catch (error) {
     console.error('Login error:', error);
     alert('An error occurred');
-  }
+  }finally {
+      setLoading(false);
+    }
 };
 
 
@@ -45,6 +51,7 @@ const handleLogin = async (e) => {
           onChange={(e) => setUsername(e.target.value)}
           required
           className={style.input}
+          disabled={loading}
         />
 
         <input
@@ -54,10 +61,12 @@ const handleLogin = async (e) => {
           onChange={(e) => setPassword(e.target.value)}
           required
           className={style.input}
+                    disabled={loading}
         />
 
-        <button type="submit" className={style.button}>
-          LOGIN
+        <button type="submit" className={style.button} disabled={loading}
+>
+          {loading ? 'Logging in...' : 'LOGIN'}
         </button>
       </form>
     </div>

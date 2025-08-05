@@ -164,18 +164,19 @@ const OrderForm = ({ userId }) => {
       <div className={styles.inputRow}>
         <div className={styles.inputGroup}>
           <label htmlFor="itemName">Item Name</label>
-          <select
-            id="itemName"
-            name="itemName"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-            className={validationErrors.itemName ? styles.inputError : ''}
-          >
-            <option value="">Select Item</option>
-            {[...defaultCategories, ...customCategories.map(cat => cat.itemName)].map((item, index) => (
-              <option key={index} value={item}>{item}</option>
-            ))}
-          </select>
+        <select
+  id="itemName"
+  name="itemName"
+  value={itemName}
+  onChange={(e) => setItemName(e.target.value)}
+  className={validationErrors.itemName ? styles.inputError : ''}
+>
+  <option value="">Select Item</option>
+  {[...defaultCategories, ...customCategories].map((item, index) => (
+    <option key={index} value={item}>{item}</option>
+  ))}
+</select>
+
           {validationErrors.itemName && <span className={styles.errorText}>{validationErrors.itemName}</span>}
         </div>
 

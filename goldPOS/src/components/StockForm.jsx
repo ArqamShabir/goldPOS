@@ -49,7 +49,7 @@ const StockForm = ({ userId }) => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    .then(res => setCustomCategories(res.data.map(cat => cat.name)))
+    .then(res => setCustomCategories(res.data))
     .catch(err => {
       console.error("Error fetching custom categories", err);
       if (err.response) {
