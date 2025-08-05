@@ -82,7 +82,7 @@ const OrderForm = ({ userId }) => {
     if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1) errors.quantity = "Quantity must be a positive integer.";
     if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1) errors.pieces = "Pieces must be a positive integer.";
     if (!itemPrice || isNaN(itemPrice) || itemPrice < 1) errors.itemPrice = "Item Price must be a positive number.";
-    if (waste === '' || isNaN(waste) || waste < 0) errors.waste = "Waste must be a non-negative number.";
+    if (waste === '' || isNaN(waste) || waste < 1) errors.waste = "Waste must be a positive number.";
     if (!totalWeight || isNaN(totalWeight) || totalWeight < 1) errors.totalWeight = "Total Weight must be a positive number.";
     if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
     if (!totalMaking || isNaN(totalMaking) || totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
@@ -258,7 +258,7 @@ const OrderForm = ({ userId }) => {
         </div>
 
         <div className={styles.inputGroup}>
-          <label htmlFor="totalWeight">Total Weight</label>
+          <label htmlFor="totalWeight">Total Weight (grams)</label>
           <input
             type="number"
             id="totalWeight"
@@ -286,7 +286,7 @@ const OrderForm = ({ userId }) => {
         </div>
 
         <div className={styles.inputGroup}>
-          <label htmlFor="totalMaking">Total Making</label>
+          <label htmlFor="totalMaking">Total Making (PKR)</label>
           <input
             type="number"
             id="totalMaking"

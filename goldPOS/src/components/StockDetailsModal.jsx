@@ -42,7 +42,7 @@ const StockDetailsModal = ({ stock, isOpen, onClose }) => {
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Waste</span>
-          <span className={styles.attrValue}>{stock.waste}</span>
+          <span className={styles.attrValue}>{stock.waste} g</span>
         </div>
 
         <div className={styles.field}>
@@ -57,12 +57,12 @@ const StockDetailsModal = ({ stock, isOpen, onClose }) => {
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Making Per Gram</span>
-          <span className={styles.attrValue}>{stock.makingPerGram}</span>
+          <span className={styles.attrValue}>PKR {stock.makingPerGram}</span>
         </div>
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Total Making</span>
-          <span className={styles.attrValue}>{stock.totalMaking}</span>
+          <span className={styles.attrValue}>PKR {stock.totalMaking}</span>
         </div>
 
         <div className={styles.field}>

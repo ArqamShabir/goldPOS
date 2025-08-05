@@ -268,7 +268,7 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
         </div>
 
         <div className={formStyles.inputGroup}>
-          <label htmlFor="totalWeight">Total Weight</label>
+          <label htmlFor="totalWeight">Total Weight (grams)</label>
           <input 
             type="number" 
             id="totalWeight" 
@@ -296,7 +296,7 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
         </div>
 
         <div className={formStyles.inputGroup}>
-          <label htmlFor="totalMaking">Total Making</label>
+          <label htmlFor="totalMaking">Total Making (PKR)</label>
           <input 
             type="number" 
             id="totalMaking" 

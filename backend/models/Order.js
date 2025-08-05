@@ -4,7 +4,7 @@ const OrderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   itemName: { type: String, required: true },
   customerName: { type: String, required: true },
-  tagNumber: { type: String, required: true, unique: true },
+  tagNumber: { type: String, required: true,  },
   karat: {type: Number, required: true, min: 0,       
     validate: {  
        validator: Number.isInteger,

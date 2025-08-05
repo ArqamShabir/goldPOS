@@ -100,7 +100,7 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
     if (!formData.quantity || isNaN(formData.quantity) || parseInt(formData.quantity, 10) < 1) errors.quantity = "Quantity must be a positive integer.";
     if (!formData.pieces || isNaN(formData.pieces) || parseInt(formData.pieces, 10) < 1) errors.pieces = "Pieces must be a positive integer.";
     if (!formData.itemPrice || isNaN(formData.itemPrice) || formData.itemPrice < 1) errors.itemPrice = "Item Price must be a positive number.";
-    if (!formData.waste || isNaN(formData.waste) || formData.waste < 0) errors.waste = "Waste must be a positive number.";
+    if (!formData.waste || isNaN(formData.waste) || formData.waste < 1) errors.waste = "Waste must be a positive number.";
     if (!formData.totalWeight || isNaN(formData.totalWeight) || formData.totalWeight < 1) errors.totalWeight = "Total Weight must be a positive number.";
     if (!formData.makingPerGram || isNaN(formData.makingPerGram) || formData.makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
     if (!formData.totalMaking || isNaN(formData.totalMaking) || formData.totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
@@ -285,7 +285,7 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
         </div>
 
         <div className={formStyles.inputGroup}>
-          <label htmlFor="totalWeight">Total Weight</label>
+          <label htmlFor="totalWeight">Total Weight (grams)</label>
           <input 
             type="number" 
             id="totalWeight" 
@@ -313,7 +313,7 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
         </div>
 
         <div className={formStyles.inputGroup}>
-          <label htmlFor="totalMaking">Total Making</label>
+          <label htmlFor="totalMaking">Total Making (PKR)</label>
           <input 
             type="number" 
             id="totalMaking" 

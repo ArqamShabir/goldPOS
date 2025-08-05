@@ -66,7 +66,7 @@ const StockForm = ({ userId }) => {
       const timer = setTimeout(() => {
         setMessage('');
         setIsSuccess(false);
-      }, 10000); // 10 seconds
+      }, 4000); 
       return () => clearTimeout(timer);
     }
   }, [isSuccess, message]);
@@ -79,10 +79,11 @@ const StockForm = ({ userId }) => {
     if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1) errors.quantity = "Quantity must be a positive integer.";
     if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1) errors.pieces = "Pieces must be a positive integer.";
     if (!itemPrice || isNaN(itemPrice) || itemPrice < 1) errors.itemPrice = "Item Price must be a positive number.";
-    if (waste === '' || isNaN(waste) || waste < 0) errors.waste = "Waste must be a non-negative number.";
+    if (waste === '' || isNaN(waste) || waste < 1) errors.waste = "Waste must be a positive number.";
     if (!totalWeight || isNaN(totalWeight) || totalWeight < 1) errors.totalWeight = "Total Weight must be a positive number.";
     if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
     if (!totalMaking || isNaN(totalMaking) || totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
+    if (!description || description.length>200 ) errors.description = "Description should be less than 200 letters.";
     
     // Integer validation checks
     if (quantity && !Number.isInteger(Number(quantity))) errors.quantity = "Quantity must be an integer.";
@@ -360,7 +361,7 @@ const StockForm = ({ userId }) => {
         </div>
  
         <div className={styles.inputGroup}>
-          <label htmlFor="totalWeight">Total Weight</label>
+          <label htmlFor="totalWeight">Total Weight (grams)</label>
           <input 
             type="number" 
             id="totalWeight" 
@@ -386,7 +387,7 @@ const StockForm = ({ userId }) => {
         </div>
  
         <div className={styles.inputGroup}>
-          <label htmlFor="totalMaking">Total Making</label>
+          <label htmlFor="totalMaking">Total Making (PKR)</label>
           <input 
             type="number" 
             id="totalMaking" 
