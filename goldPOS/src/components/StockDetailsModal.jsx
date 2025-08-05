@@ -76,6 +76,21 @@ const StockDetailsModal = ({ stock, isOpen, onClose }) => {
             {stock.createdAt && new Date(stock.createdAt).toLocaleString()}
           </span>
         </div>
+
+        {stock.updatedAt && (
+          <div className={styles.field}>
+            <span className={styles.attrLabel}>Updated At</span>
+            <span className={styles.attrValue}>
+              {new Date(stock.updatedAt).toLocaleString()}
+            </span>
+          </div>
+        )}
+
+        <div className={`${styles.field} ${styles.fullWidthField}`}>
+          <span className={styles.attrLabel}>Description</span>
+          <span className={styles.attrValue}>{stock.description}</span>
+        </div>
+
       </div>
 
       <button className={styles.closeButton} onClick={onClose}>

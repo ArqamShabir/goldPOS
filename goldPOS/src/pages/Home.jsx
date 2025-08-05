@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Mail, CalendarDays, User2 } from "lucide-react";
 import styles from "../css/InnerDashboard.module.css";
 import axios from 'axios';
+import jsPDF from "jspdf"; 
+import OrderDetailsModal from "../components/OrderDetailsModal.jsx"; 
+import UpdateOrderFormModal from "../components/UpdateOrderFormModal";
 
 export default function Home() {
   const [loadingUser, setLoadingUser] = useState(true);
@@ -17,6 +20,9 @@ export default function Home() {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [errorOrders, setErrorOrders] = useState(null);
+
+  const [selectedOrderForDetails, setSelectedOrderForDetails] = useState(null);
+  const [selectedOrderForUpdate, setSelectedOrderForUpdate] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -118,6 +124,42 @@ export default function Home() {
     return result;
   }, [currentFilter, orders]);
 
+  // Function to open the details modal
+  const openDetailsModal = (order) => {
+    setSelectedOrderForDetails(order);
+  };
+
+  // Function to open the update form modal
+  const openUpdateModal = (order, e) => {
+    // Stop the event from propagating to the parent row
+    e.stopPropagation();
+    setSelectedOrderForUpdate(order);
+  };
+
+  const handleUpdateSuccess = (updatedOrder) => {
+    setOrders(orders.map(order => order._id === updatedOrder._id ? updatedOrder : order));
+    // Close the update modal on success
+    setSelectedOrderForUpdate(null);
+  };
+
+  const printTag = (item) => {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: [40, 40],
+    });
+
+    doc.setFontSize(8);
+    doc.text(`Item: ${item.itemName}`, 3, 8);
+    doc.text(`Tag #: ${item.tagNumber}`, 3, 13);
+    doc.text(`Customer: ${item.customerName}`, 3, 18);
+    doc.text(`Weight: ${item.totalWeight}g`, 3, 23);
+    doc.text(`Price: PKR ${item.itemPrice}`, 3, 28);
+    doc.text(`Status: ${item.status}`, 3, 33); 
+
+    doc.save(`tag-${item.tagNumber}.pdf`);
+  };
+
 
   return (
     <div className={styles.container}>
@@ -184,50 +226,77 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.tableContainer}>
-          <table className={styles.table}>
-            <thead>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Tag Number</th>
+              <th>Date</th>
+              <th>Customer Name</th>
+              <th>Item Name</th>
+              <th>Total Weight</th>
+              <th>Item Price</th>
+              <th>Status</th>
+              <th>Print Tag</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredOrders.length === 0 ? (
               <tr>
-                <th>Tag Number</th>
-                <th>Date</th>
-                <th>Customer Name</th>
-                <th>Item Name</th>
-                <th>Total Weight</th>
-                <th>Item Price</th>
-                <th>Status</th>
+                <td colSpan="9" style={{ textAlign: "center", padding: "1rem" }}>
+                  No orders found
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.length === 0 ? (
-                <tr>
-                  <td colSpan="7" style={{ textAlign: "center", padding: "1rem" }}>
-                    No orders found
+            ) : (
+              filteredOrders.map((item) => (
+                <tr key={item.tagNumber} onClick={() => openDetailsModal(item)} style={{ cursor: "pointer" }} >
+                  <td>{item.tagNumber}</td>
+                  <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                  <td>{item.customerName}</td>
+                  <td>{item.itemName}</td>
+                  <td>{item.totalWeight}g</td>
+                  <td>PKR {item.itemPrice}</td>
+                  <td>
+                    <span
+                      className={`${styles.status} ${
+                        styles[item.status.toLowerCase()]
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+                  <td>
+                    <button onClick={(e) => { e.stopPropagation(); printTag(item); }} style={{ padding: "4px 8px" }}>
+                      🖨️
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={(e) => openUpdateModal(item, e)} style={{ padding: "4px 8px" }}>
+                      ✏️
+                    </button>
                   </td>
                 </tr>
-              ) : (
-                filteredOrders.map((item) => (
-                  <tr key={item.tagNumber}>
-                    <td>{item.tagNumber}</td>
-                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td>{item.customerName}</td>
-                    <td>{item.itemName}</td>
-                    <td>{item.totalWeight}g</td>
-                    <td>PKR {item.itemPrice}</td>
-                    <td>
-                      <span
-                        className={`${styles.status} ${
-                          styles[item.status.toLowerCase()]
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
       )}
+
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        order={selectedOrderForDetails}
+        isOpen={!!selectedOrderForDetails}
+        onClose={() => setSelectedOrderForDetails(null)}
+      />
+
+      {/* Update Order Form Modal */}
+      <UpdateOrderFormModal 
+        orderData={selectedOrderForUpdate}
+        isOpen={!!selectedOrderForUpdate}
+        onClose={() => setSelectedOrderForUpdate(null)}
+        onUpdateSuccess={handleUpdateSuccess}
+      />
     </div>
   );
 }

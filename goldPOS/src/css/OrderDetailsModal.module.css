@@ -56,13 +56,17 @@
   font-size: 14px;
   font-weight: 500;
   color: #6b7280;
+  /* This is the key change to ensure text wraps correctly, especially for long words. */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .closeButton {
   margin-top: 20px;
   width: 100%;
   background-color: #facc15;
-  color: #444;
+  color:white;
   font-weight: 600;
   border: none;
   border-radius: 6px;
@@ -73,3 +77,14 @@
 .closeButton:hover {
   background-color: #fbbf24;
 }
+
+.fullWidthField {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .modalGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
