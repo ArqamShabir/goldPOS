@@ -6,7 +6,8 @@ const authenticateUser = require('../middleware/auth');
 // Get next tag number for frontend preview
 router.get('/next-tag', authenticateUser, async (req, res) => {
   try {
-    const lastOrder = await Order.findOne().sort({ createdAt: -1 });
+    //const lastOrder = await Order.findOne().sort({ createdAt: -1 });
+    const lastOrder = await Order.findOne({ userId: req.userId }).sort({ createdAt: -1 });
 
     let nextTagNumber = "OR_TAG001";
 
@@ -26,7 +27,8 @@ router.get('/next-tag', authenticateUser, async (req, res) => {
 // Create order with auto-generated tag number
 router.post('/', authenticateUser, async (req, res) => {
   try {
-    const lastOrder = await Order.findOne().sort({ createdAt: -1 });
+    //const lastOrder = await Order.findOne().sort({ createdAt: -1 });
+    const lastOrder = await Order.findOne({ userId: req.userId }).sort({ createdAt: -1 });
 
     let newTagNumber = "OR_TAG001";
 
