@@ -16,13 +16,43 @@ export default function Home() {
     createdAt: "",
   });
 
-  // State for orders data and its loading/error status
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [errorOrders, setErrorOrders] = useState(null);
 
   const [selectedOrderForDetails, setSelectedOrderForDetails] = useState(null);
   const [selectedOrderForUpdate, setSelectedOrderForUpdate] = useState(null);
+
+  const [goldRates, setGoldRates] = useState(null);
+  const [loadingGoldRate, setLoadingGoldRate] = useState(true);
+  const [errorGoldRate, setErrorGoldRate] = useState(null);
+
+  useEffect(() => {
+    const fetchGoldRate = async () => {
+      try {
+        setLoadingGoldRate(true);
+        setErrorGoldRate(null);
+
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/gold-rate-live`);
+
+        if (response.data && response.data.prices) {
+          setGoldRates(response.data.prices); 
+          console.log("Live gold rate data fetched:", response.data.prices);
+        } else {
+          throw new Error("Invalid response from gold rate API.");
+        }
+      } catch (error) {
+        console.error("Error fetching live gold rate:", error);
+        setErrorGoldRate(error.message || "Could not fetch live gold rate.");
+      } finally {
+        setLoadingGoldRate(false);
+      }
+    };
+
+    fetchGoldRate();
+    const intervalId = setInterval(fetchGoldRate, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -94,7 +124,6 @@ export default function Home() {
 
   const handleFilter = (filter) => setCurrentFilter(filter);
 
-  // Use useMemo to filter the fetched orders
   const filteredOrders = useMemo(() => {
     const today = new Date();
     let result = orders;
@@ -124,21 +153,17 @@ export default function Home() {
     return result;
   }, [currentFilter, orders]);
 
-  // Function to open the details modal
   const openDetailsModal = (order) => {
     setSelectedOrderForDetails(order);
   };
 
-  // Function to open the update form modal
   const openUpdateModal = (order, e) => {
-    // Stop the event from propagating to the parent row
     e.stopPropagation();
     setSelectedOrderForUpdate(order);
   };
 
   const handleUpdateSuccess = (updatedOrder) => {
     setOrders(orders.map(order => order._id === updatedOrder._id ? updatedOrder : order));
-    // Close the update modal on success
     setSelectedOrderForUpdate(null);
   };
 
@@ -160,9 +185,47 @@ export default function Home() {
     doc.save(`tag-${item.tagNumber}.pdf`);
   };
 
+return (
+  <div className={styles.container}>
+    <div className={styles.headerWidgets}>
 
-  return (
-    <div className={styles.container}>
+      {loadingGoldRate ? (
+        <div className={`${styles.loadingContainer} ${styles.goldRateTableCard}`}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Fetching live gold rate...</p>
+        </div>
+      ) : errorGoldRate ? (
+        <div className={`${styles.errorContainer} ${styles.goldRateTableCard}`}>
+          <p>{errorGoldRate}</p>
+        </div>
+      ) : (
+        <div className={styles.goldRateTableCard}>
+          <h2 className={styles.goldRateTitle}>Live Gold Rates</h2>
+          <table className={styles.goldRateTable}>
+            <thead>
+              <tr>
+                <th>Unit</th>
+                <th>24K Price</th>
+                <th>22K Price</th>
+                <th>21K Price</th>
+                <th>18K Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {goldRates && Object.entries(goldRates).map(([unit, prices]) => (
+                <tr key={unit}>
+                  <td>{unit}</td>
+                  <td>PKR {prices['24K'].toLocaleString()}</td>
+                  <td>PKR {prices['22K'].toLocaleString()}</td>
+                  <td>PKR {prices['21K'].toLocaleString()}</td>
+                  <td>PKR {prices['18K'].toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       <div className={styles.profileWrapper}>
         {loadingUser ? (
           <div className={styles.loadingContainer}>
@@ -178,7 +241,6 @@ export default function Home() {
             <User2 size={48} className={styles.avatarIcon} />
             <h3 className={styles.name}>{userInfo.name}</h3>
             <p className={styles.phone}>+{userInfo.phoneNumber}</p>
-
             <div className={styles.infoBox}>
               <Mail size={20} className={styles.icon} />
               <div>
@@ -186,7 +248,6 @@ export default function Home() {
                 <div className={styles.text}>{userInfo.username}</div>
               </div>
             </div>
-
             <div className={styles.infoBox}>
               <CalendarDays size={20} className={styles.icon} />
               <div>
@@ -197,35 +258,36 @@ export default function Home() {
           </div>
         )}
       </div>
+    </div>
 
-      <div className={styles.header}>
-        <h2 className={styles.title}>Recent Orders</h2>
-        <div className={styles.filters}>
-          {filters.map((item) => (
-            <button
-              key={item}
-              className={`${styles.filterButton} ${
-                currentFilter === item ? styles.active : ""
-              }`}
-              onClick={() => handleFilter(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+    <div className={styles.header}>
+      <h2 className={styles.title}>Recent Orders</h2>
+      <div className={styles.filters}>
+        {filters.map((item) => (
+          <button
+            key={item}
+            className={`${styles.filterButton} ${
+              currentFilter === item ? styles.active : ""
+            }`}
+            onClick={() => handleFilter(item)}
+          >
+            {item}
+          </button>
+        ))}
       </div>
+    </div>
 
-      {loadingOrders ? (
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading orders data...</p>
-        </div>
-      ) : errorOrders ? (
-        <div className={styles.errorContainer}>
-          <p>{errorOrders}</p>
-        </div>
-      ) : (
-        <div className={styles.tableContainer}>
+    {loadingOrders ? (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p className={styles.loadingText}>Loading orders data...</p>
+      </div>
+    ) : errorOrders ? (
+      <div className={styles.errorContainer}>
+        <p>{errorOrders}</p>
+      </div>
+    ) : (
+      <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -281,22 +343,22 @@ export default function Home() {
           </tbody>
         </table>
       </div>
-      )}
+    )}
 
-      {/* Order Details Modal */}
-      <OrderDetailsModal
-        order={selectedOrderForDetails}
-        isOpen={!!selectedOrderForDetails}
-        onClose={() => setSelectedOrderForDetails(null)}
-      />
+    {/* Order Details Modal */}
+    <OrderDetailsModal
+      order={selectedOrderForDetails}
+      isOpen={!!selectedOrderForDetails}
+      onClose={() => setSelectedOrderForDetails(null)}
+    />
 
-      {/* Update Order Form Modal */}
-      <UpdateOrderFormModal 
-        orderData={selectedOrderForUpdate}
-        isOpen={!!selectedOrderForUpdate}
-        onClose={() => setSelectedOrderForUpdate(null)}
-        onUpdateSuccess={handleUpdateSuccess}
-      />
-    </div>
-  );
+    {/* Update Order Form Modal */}
+    <UpdateOrderFormModal
+      orderData={selectedOrderForUpdate}
+      isOpen={!!selectedOrderForUpdate}
+      onClose={() => setSelectedOrderForUpdate(null)}
+      onUpdateSuccess={handleUpdateSuccess}
+    />
+  </div>
+);
 }
