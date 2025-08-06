@@ -117,6 +117,10 @@
   background-color: #fafafa;
   font-weight: bold;
 }
+/* 
+.goldRateTable thead{
+  background-color: #f57c00;
+} */
 
 .profileWrapper {
   width: 100%;

@@ -50,7 +50,7 @@ export default function Home() {
     };
 
     fetchGoldRate();
-    const intervalId = setInterval(fetchGoldRate, 60000);
+    const intervalId = setInterval(fetchGoldRate, 21600000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -202,8 +202,8 @@ return (
         <div className={styles.goldRateTableCard}>
           <h2 className={styles.goldRateTitle}>Live Gold Rates</h2>
           <table className={styles.goldRateTable}>
-            <thead>
-              <tr>
+            <thead className={styles.tableHeader}>
+              <tr >
                 <th>Unit</th>
                 <th>24K Price</th>
                 <th>22K Price</th>

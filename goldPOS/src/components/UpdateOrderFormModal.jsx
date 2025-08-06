@@ -52,6 +52,23 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
     }
   }, [orderData]);
 
+  useEffect(() => {
+    const weight = parseFloat(formData.totalWeight);
+    const makingRate = parseFloat(formData.makingPerGram);
+
+    if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
+      setFormData(prevData => ({
+        ...prevData,
+        totalMaking: (weight * makingRate).toFixed(2) 
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        totalMaking: '' 
+      }));
+    }
+  }, [formData.totalWeight, formData.makingPerGram]); 
+
   // Fetch custom categories on component mount
   useEffect(() => {
     const fetchCustomCategories = async () => {
@@ -105,10 +122,21 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
     if (!formData.makingPerGram || isNaN(formData.makingPerGram) || formData.makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
     if (!formData.totalMaking || isNaN(formData.totalMaking) || formData.totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
 
-    // Mongoose integer validation for karat, quantity, and pieces
     //if (formData.karat && !Number.isInteger(Number(formData.karat))) errors.karat = "Karat must be an integer.";
     if (formData.quantity && !Number.isInteger(Number(formData.quantity))) errors.quantity = "Quantity must be an integer.";
     if (formData.pieces && !Number.isInteger(Number(formData.pieces))) errors.pieces = "Pieces must be an integer.";
+
+    const parsedItemPrice = parseFloat(formData.itemPrice);
+    const parsedTotalMaking = parseFloat(formData.totalMaking);
+    if (!isNaN(parsedItemPrice) && !isNaN(parsedTotalMaking) && parsedItemPrice <= parsedTotalMaking) {
+      errors.itemPrice = "Item Price must be greater than Total Making.";
+    }
+
+    const parsedWaste = parseFloat(formData.waste);
+    const parsedTotalWeight = parseFloat(formData.totalWeight);
+    if (!isNaN(parsedWaste) && !isNaN(parsedTotalWeight) && parsedWaste >= parsedTotalWeight) {
+      errors.waste = "Waste must be less than Total Weight.";
+    }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -128,7 +156,10 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
       const token = localStorage.getItem("token"); 
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/api/orders/${orderData._id}`,
-        formData,
+        {
+          ...formData,
+          totalMaking: parseFloat(formData.totalMaking) 
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -321,7 +352,8 @@ const UpdateOrderFormModal = ({ orderData, onUpdateSuccess, isOpen, onClose }) =
             min="0" 
             value={formData.totalMaking} 
             onChange={handleChange}
-            className={validationErrors.totalMaking ? formStyles.inputError : ''}
+            readOnly 
+            className={formStyles.inputGroup.input}
           />
           {validationErrors.totalMaking && <span className={formStyles.errorText}>{validationErrors.totalMaking}</span>}
         </div>

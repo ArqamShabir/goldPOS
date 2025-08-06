@@ -71,6 +71,17 @@ const StockForm = ({ userId }) => {
     }
   }, [isSuccess, message]);
 
+  useEffect(() => {
+    const weight = parseFloat(totalWeight);
+    const makingRate = parseFloat(makingPerGram);
+
+    if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
+      setTotalMaking((weight * makingRate).toFixed(2)); // Calculate and format to 2 decimal places
+    } else {
+      setTotalMaking(''); // Clear if inputs are invalid
+    }
+  }, [totalWeight, makingPerGram]);
+
   // Validation function
   const validateForm = () => {
     const errors = {};
@@ -88,6 +99,18 @@ const StockForm = ({ userId }) => {
     // Integer validation checks
     if (quantity && !Number.isInteger(Number(quantity))) errors.quantity = "Quantity must be an integer.";
     if (pieces && !Number.isInteger(Number(pieces))) errors.pieces = "Pieces must be an integer.";
+
+    const parsedItemPrice = parseFloat(itemPrice);
+    const parsedTotalMaking = parseFloat(totalMaking);
+    if (!isNaN(parsedItemPrice) && !isNaN(parsedTotalMaking) && parsedItemPrice <= parsedTotalMaking) {
+      errors.itemPrice = "Item Price must be greater than Total Making.";
+    }
+
+    const parsedWaste = parseFloat(waste);
+    const parsedTotalWeight = parseFloat(totalWeight);
+    if (!isNaN(parsedWaste) && !isNaN(parsedTotalWeight) && parsedWaste >= parsedTotalWeight) {
+      errors.waste = "Waste must be less than Total Weight.";
+    }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -114,7 +137,7 @@ const StockForm = ({ userId }) => {
         totalWeight,
         itemPrice,
         makingPerGram,
-        totalMaking,
+        totalMaking: parseFloat(totalMaking),
         description
       }, {
         headers: {
@@ -217,11 +240,11 @@ const StockForm = ({ userId }) => {
           className="custom-modal"
           overlayClassName="custom-overlay"
         >
-          <h2 style={{ marginBottom: '1rem' }}>Delete Categories</h2>
+          <h2 style={{ marginBottom: '1rem', fontWeight: 600, fontSize: '1.25rem', textAlign: 'center', color: '#444' }}>Delete Categories</h2>
           {customCategories.length === 0 ? (
             <p>No custom categories available.</p>
           ) : (
-            <ul style={{ listStyle: 'none', padding: 0, maxHeight: '200px', overflowY: 'auto' }}>
+            <ul style={{ listStyle: 'none', padding: '1rem', maxHeight: '200px', overflowY: 'auto' }}>
               {customCategories.map((cat, index) => (
                 <li key={index}>
                   <label>
@@ -262,6 +285,8 @@ const StockForm = ({ userId }) => {
             />
             <button
               type="button"
+              className={styles.submitButton}
+              style={{ marginTop: '10px', padding: '0.5rem 0.5rem', fontSize: '0.9rem' }} 
               onClick={() => {
                 const token = localStorage.getItem("token");
                 axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
@@ -393,8 +418,9 @@ const StockForm = ({ userId }) => {
             id="totalMaking" 
             min="0" 
             value={totalMaking} 
+            readOnly 
             onChange={(e) => setTotalMaking(e.target.value)}
-            className={validationErrors.totalMaking ? styles.inputError : ''}
+            className={styles.inputGroup.input}
           />
           {validationErrors.totalMaking && <span className={styles.errorText}>{validationErrors.totalMaking}</span>}
         </div>

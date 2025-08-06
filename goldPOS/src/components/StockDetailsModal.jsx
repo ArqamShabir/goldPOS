@@ -42,12 +42,12 @@ const StockDetailsModal = ({ stock, isOpen, onClose }) => {
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Waste</span>
-          <span className={styles.attrValue}>{stock.waste} g</span>
+          <span className={styles.attrValue}>{stock.waste}g</span>
         </div>
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Total Weight</span>
-          <span className={styles.attrValue}>{stock.totalWeight} g</span>
+          <span className={styles.attrValue}>{stock.totalWeight}g</span>
         </div>
 
         <div className={styles.field}>
@@ -86,7 +86,6 @@ const StockDetailsModal = ({ stock, isOpen, onClose }) => {
           </div>
         )}
         
-        {/* The description field now spans all columns to prevent overflow */}
         <div className={`${styles.field} ${styles.fullWidthField}`}>
           <span className={styles.attrLabel}>Description</span>
           <span className={styles.attrValue}>{stock.description}</span>

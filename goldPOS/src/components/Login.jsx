@@ -7,6 +7,8 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(''); 
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate(); 
 
 const handleLogin = async (e) => {
@@ -14,6 +16,8 @@ const handleLogin = async (e) => {
     if (loading) return;
 
     setLoading(true);
+    setMessage(''); 
+    setIsSuccess(false); 
 
   try {
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/login`, {
@@ -28,11 +32,14 @@ const handleLogin = async (e) => {
       localStorage.setItem('token', data.token);
       navigate('/dashboard');
     } else {
-      alert(data.message || 'Login failed');
+      // alert(data.message || 'Login failed');
+      setMessage(data.message || 'Login failed. Please check your credentials.');
+        setIsSuccess(false);
     }
   } catch (error) {
     console.error('Login error:', error);
-    alert('An error occurred');
+    setMessage('An unexpected error occurred. Please try again.');
+    setIsSuccess(false);
   }finally {
       setLoading(false);
     }
@@ -41,12 +48,19 @@ const handleLogin = async (e) => {
 
   return (
     <div className={style.loginContainer}>
+
+      {message && (
+        <div className={isSuccess ? style.successMessage : style.errorMessage}>
+          {message}
+        </div>
+      )}
+
       <img src={logo} alt="logo" className={style.logo} />
 
       <form onSubmit={handleLogin} className={style.form}>
         <input
           type="text"
-          placeholder="USERNAME"
+          placeholder="Email"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -56,12 +70,12 @@ const handleLogin = async (e) => {
 
         <input
           type="password"
-          placeholder="PASSWORD"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           className={style.input}
-                    disabled={loading}
+          disabled={loading}
         />
 
         <button type="submit" className={style.button} disabled={loading}

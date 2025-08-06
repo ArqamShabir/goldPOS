@@ -57,20 +57,27 @@ const OrderForm = ({ userId }) => {
     fetchNextTag();
   }, [userId]);
 
-  // New useEffect to handle message timeout
   useEffect(() => {
-    // If there's a success message, set a timer to clear it after 10 seconds.
     if (isSuccess && message) {
       const timer = setTimeout(() => {
         setMessage('');
         setIsSuccess(false);
-      }, 4000); // 10 seconds
+      }, 4000); 
 
-      // Cleanup function to clear the timer if the component unmounts
-      // or if the message state changes before the timer finishes.
       return () => clearTimeout(timer);
     }
   }, [isSuccess, message]);
+
+  useEffect(() => {
+    const weight = parseFloat(totalWeight);
+    const makingRate = parseFloat(makingPerGram);
+
+    if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
+      setTotalMaking((weight * makingRate).toFixed(2)); 
+    } else {
+      setTotalMaking(''); 
+    }
+  }, [totalWeight, makingPerGram]);
 
   // Validation function matching the UpdateOrderFormModal
   const validateForm = () => {
@@ -90,6 +97,18 @@ const OrderForm = ({ userId }) => {
     // Integer validation checks
     if (quantity && !Number.isInteger(Number(quantity))) errors.quantity = "Quantity must be an integer.";
     if (pieces && !Number.isInteger(Number(pieces))) errors.pieces = "Pieces must be an integer.";
+
+    const parsedItemPrice = parseFloat(itemPrice);
+    const parsedTotalMaking = parseFloat(totalMaking);
+    if (!isNaN(parsedItemPrice) && !isNaN(parsedTotalMaking) && parsedItemPrice <= parsedTotalMaking) {
+      errors.itemPrice = "Item Price must be greater than Total Making.";
+    }
+
+    const parsedWaste = parseFloat(waste);
+    const parsedTotalWeight = parseFloat(totalWeight);
+    if (!isNaN(parsedWaste) && !isNaN(parsedTotalWeight) && parsedWaste >= parsedTotalWeight) {
+      errors.waste = "Waste must be less than Total Weight.";
+    }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -116,7 +135,7 @@ const OrderForm = ({ userId }) => {
         totalWeight,
         itemPrice,
         makingPerGram,
-        totalMaking,
+        totalMaking: parseFloat(totalMaking),
         customerName
       }, {
         headers: {
@@ -295,7 +314,8 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={totalMaking}
             onChange={(e) => setTotalMaking(e.target.value)}
-            className={validationErrors.totalMaking ? styles.inputError : ''}
+            readOnly 
+            className={styles.inputGroup.input}
           />
           {validationErrors.totalMaking && <span className={styles.errorText}>{validationErrors.totalMaking}</span>}
         </div>

@@ -39,7 +39,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
         </div>
         <div className={styles.field}>
           <span className={styles.attrLabel}>Waste</span>
-          <span className={styles.attrValue}>{order.waste}</span>
+          <span className={styles.attrValue}>{order.waste}g</span>
         </div>
 
         <div className={styles.field}>
@@ -52,17 +52,24 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
         </div>
         <div className={styles.field}>
           <span className={styles.attrLabel}>Making / gram</span>
-          <span className={styles.attrValue}>{order.makingPerGram}</span>
+          <span className={styles.attrValue}>PKR {order.makingPerGram}</span>
         </div>
 
         <div className={styles.field}>
           <span className={styles.attrLabel}>Total Making</span>
-          <span className={styles.attrValue}>{order.totalMaking}</span>
+          <span className={styles.attrValue}>PKR {order.totalMaking}</span>
         </div>
+
         <div className={styles.field}>
           <span className={styles.attrLabel}>Customer Name</span>
           <span className={styles.attrValue}>{order.customerName}</span>
         </div>
+
+        <div className={styles.field}>
+          <span className={styles.attrLabel}>Status</span>
+          <span className={styles.attrValue}>{order.status}</span>
+        </div>
+
         {order.createdAt && (
           <div className={styles.field}>
             <span className={styles.attrLabel}>Created At</span>

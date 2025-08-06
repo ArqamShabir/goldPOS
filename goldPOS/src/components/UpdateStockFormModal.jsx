@@ -89,6 +89,23 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
     }
   };
 
+  useEffect(() => {
+    const weight = parseFloat(formData.totalWeight);
+    const makingRate = parseFloat(formData.makingPerGram);
+
+    if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
+      setFormData(prevData => ({
+        ...prevData,
+        totalMaking: (weight * makingRate).toFixed(2) // Calculate and format to 2 decimal places
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        totalMaking: '' // Clear if inputs are invalid
+      }));
+    }
+  }, [formData.totalWeight, formData.makingPerGram]);
+
   const validateForm = () => {
     const errors = {};
     if (!formData.itemName) errors.itemName = "Item Name is required.";
@@ -106,6 +123,18 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
     if (formData.karat && !Number.isInteger(Number(formData.karat))) errors.karat = "Karat must be an integer.";
     if (formData.quantity && !Number.isInteger(Number(formData.quantity))) errors.quantity = "Quantity must be an integer.";
     if (formData.pieces && !Number.isInteger(Number(formData.pieces))) errors.pieces = "Pieces must be an integer.";
+
+    const parsedItemPrice = parseFloat(formData.itemPrice);
+    const parsedTotalMaking = parseFloat(formData.totalMaking);
+    if (!isNaN(parsedItemPrice) && !isNaN(parsedTotalMaking) && parsedItemPrice <= parsedTotalMaking) {
+      errors.itemPrice = "Item Price must be greater than Total Making.";
+    }
+
+    const parsedWaste = parseFloat(formData.waste);
+    const parsedTotalWeight = parseFloat(formData.totalWeight);
+    if (!isNaN(parsedWaste) && !isNaN(parsedTotalWeight) && parsedWaste >= parsedTotalWeight) {
+      errors.waste = "Waste must be less than Total Weight.";
+    }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -126,7 +155,10 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
       const token = localStorage.getItem("token");
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/api/stocks/${stockData._id}`,
-        formData,
+        {
+          ...formData,
+          totalMaking: parseFloat(formData.totalMaking) 
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -304,7 +336,8 @@ const UpdateStockFormModal = ({ stockData, onUpdateSuccess, isOpen, onClose }) =
             min="0"
             value={formData.totalMaking} 
             onChange={handleChange} 
-            className={validationErrors.totalMaking ? formStyles.inputError : ''}
+            readOnly 
+            className={formStyles.inputGroup.input}
           />
           {validationErrors.totalMaking && <span className={formStyles.errorText}>{validationErrors.totalMaking}</span>}
         </div>
