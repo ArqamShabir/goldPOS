@@ -83,6 +83,15 @@
 }
 
 .goldRateTableCard {
+  /* background-color: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  flex: 1; */
+
+
   background-color: #fff;
   border-radius: 16px;
   padding: 1rem;
@@ -90,6 +99,12 @@
   max-width: 650px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
   flex: 1;
+
+  /* New for responsiveness */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+
 }
 
 .goldRateTitle {
@@ -102,6 +117,7 @@
 .goldRateTable {
   width: 100%;
   border-collapse: collapse;
+  min-width: 400px;
 }
 
 .goldRateTable th,
@@ -248,6 +264,12 @@
     padding: 10px;
     font-size: 0.85rem;
   }
+
+  .goldRateTable th,
+  .goldRateTable td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
   
   .headerWidgets {
     flex-direction: column;
@@ -308,6 +330,12 @@
   .table td {
     font-size: 0.75rem;
     padding: 8px;
+  }
+
+  .goldRateTable th,
+  .goldRateTable td {
+    padding: 6px 8px;
+    font-size: 0.75rem;
   }
 
   .profileCard,
