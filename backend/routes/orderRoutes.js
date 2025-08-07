@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const authenticateUser = require('../middleware/auth');
+const Stock = require('../models/Stock'); 
 
-// Get next tag number for frontend preview
+
 router.get('/next-tag', authenticateUser, async (req, res) => {
   try {
     //const lastOrder = await Order.findOne().sort({ createdAt: -1 });
@@ -24,19 +25,8 @@ router.get('/next-tag', authenticateUser, async (req, res) => {
   }
 });
 
-// Create order with auto-generated tag number
 router.post('/', authenticateUser, async (req, res) => {
   try {
-    //const lastOrder = await Order.findOne().sort({ createdAt: -1 });
-    const lastOrder = await Order.findOne({ userId: req.userId }).sort({ createdAt: -1 });
-
-    let newTagNumber = "OR_TAG001";
-
-    if (lastOrder && lastOrder.tagNumber) {
-      const lastNumber = parseInt(lastOrder.tagNumber.replace("OR_TAG", "")) || 0;
-      const nextNumber = lastNumber + 1;
-      newTagNumber = `OR_TAG${String(nextNumber).padStart(3, '0')}`;
-    }
 
     const {
       itemName,
@@ -51,10 +41,38 @@ router.post('/', authenticateUser, async (req, res) => {
       customerName
     } = req.body;
 
+    const stockItem = await Stock.findOne({ userId: req.userId, itemName: itemName });
+
+    if (!stockItem || stockItem.quantity < quantity) {
+        return res.status(400).json({ message: `Insufficient stock for "${itemName}".` });
+    }
+
+    const updatedStock = await Stock.findOneAndUpdate(
+      { userId: req.userId, itemName: itemName },
+      {
+          $inc: { quantity: -quantity } 
+      }
+  );
+
+  if (!updatedStock) {
+      return res.status(500).json({ message: 'Failed to update stock.' });
+  }
+
+   //const lastOrder = await Order.findOne().sort({ createdAt: -1 });
+   const lastOrder = await Order.findOne({ userId: req.userId }).sort({ createdAt: -1 });
+
+   let newTagNumber = "OR_TAG001";
+
+   if (lastOrder && lastOrder.tagNumber) {
+     const lastNumber = parseInt(lastOrder.tagNumber.replace("OR_TAG", "")) || 0;
+     const nextNumber = lastNumber + 1;
+     newTagNumber = `OR_TAG${String(nextNumber).padStart(3, '0')}`;
+   }
+
     const newOrder = new Order({
       userId: req.userId,
       itemName,
-      tagNumber: newTagNumber, // use auto-generated tag number
+      tagNumber: newTagNumber, 
       karat,
       quantity,
       pieces,

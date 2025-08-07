@@ -55,6 +55,45 @@ export default function Home() {
   // }, []);
 
   useEffect(() => {
+    const fetchGoldRate = async () => {
+      try {
+        setLoadingGoldRate(true);
+        setErrorGoldRate(null);
+  
+        const storedRates = localStorage.getItem("goldRates");
+        const lastFetched = localStorage.getItem("lastFetched");
+        const sixHoursInMs = 21600000;
+  
+        if (storedRates && lastFetched && (Date.now() - lastFetched) < sixHoursInMs) {
+          setGoldRates(JSON.parse(storedRates));
+          setLoadingGoldRate(false);
+          console.log("Using cached gold rates from localStorage.");
+          return; 
+        }
+  
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/gold-rate-live`);
+  
+        if (response.data && response.data.prices) {
+          localStorage.setItem("goldRates", JSON.stringify(response.data.prices));
+          localStorage.setItem("lastFetched", Date.now().toString());
+  
+          setGoldRates(response.data.prices);
+          console.log("Live gold rate data fetched and cached.");
+        } else {
+          throw new Error("Invalid response from gold rate API.");
+        }
+      } catch (error) {
+        console.error("Error fetching live gold rate:", error);
+        setErrorGoldRate(error.message || "Could not fetch live gold rate.");
+      } finally {
+        setLoadingGoldRate(false);
+      }
+    };
+  
+    fetchGoldRate(); 
+  }, []); 
+
+  useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         setLoadingUser(true);

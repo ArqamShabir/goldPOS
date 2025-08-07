@@ -30,7 +30,9 @@ const UpdateStockFormModal = ({
 
   const [customCategories, setCustomCategories] = useState([]);
   const karatOptions = [18, 21, 22, 24];
-  const defaultCategories = ["Gold Ring", "Gold Necklace"];
+  const defaultCategories = [
+    // "Gold Ring", "Gold Necklace"
+  ];
   const statusOptions = ["Pending", "Completed"];
 
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -59,7 +61,7 @@ const UpdateStockFormModal = ({
       setMessage("");
       setValidationErrors({});
       setPasswordError("");
-      setShowPasswordPrompt(false); // Reset this state when a new stock is selected
+      setShowPasswordPrompt(false);
       setVerificationPassword("");
     }
   }, [stockData]);
@@ -132,46 +134,45 @@ const UpdateStockFormModal = ({
     if (
       !formData.quantity ||
       isNaN(formData.quantity) ||
-      parseInt(formData.quantity, 10) <= 0
+      parseInt(formData.quantity, 10) < 1
     )
-      errors.quantity = "Quantity must be a positive integer.";
+      errors.quantity = "Quantity must be greater than 0.";
     if (
       !formData.pieces ||
       isNaN(formData.pieces) ||
-      parseInt(formData.pieces, 10) <= 0
+      parseInt(formData.pieces, 10) < 1
     )
-      errors.pieces = "Pieces must be a positive integer.";
+      errors.pieces = "Pieces must be greater than 0.";
     if (
       !formData.itemPrice ||
       isNaN(formData.itemPrice) ||
-      formData.itemPrice <= 0
+      formData.itemPrice < 1
     )
-      errors.itemPrice = "Item Price must be a positive number.";
-    if (!formData.waste || isNaN(formData.waste) || formData.waste <= 0)
+      errors.itemPrice = "Item Price must be greater than 0.";
+    if (!formData.waste || isNaN(formData.waste) || formData.waste < 0)
       errors.waste = "Waste must be a positive number.";
     if (
       !formData.totalWeight ||
       isNaN(formData.totalWeight) ||
-      formData.totalWeight <= 0
+      formData.totalWeight < 1
     )
-      errors.totalWeight = "Total Weight must be a positive number.";
+      errors.totalWeight = "Total Weight must be greater than 0.";
     if (
       !formData.makingPerGram ||
       isNaN(formData.makingPerGram) ||
-      formData.makingPerGram <= 0
+      formData.makingPerGram < 1
     )
-      errors.makingPerGram = "Making per Gram must be a positive number.";
+      errors.makingPerGram = "Making per Gram must be greater than 0.";
     if (
       !formData.totalMaking ||
       isNaN(formData.totalMaking) ||
-      formData.totalMaking <= 0
+      formData.totalMaking < 1
     )
-      errors.totalMaking = "Total Making must be a positive number.";
+      errors.totalMaking = "Total Making must be greater than 0.";
     if (!formData.description || formData.description.length > 200)
       errors.description = "Description should be less than 200 letters.";
     if (!formData.status) errors.status = "Status is required.";
 
-    // Mongoose integer validation for karat, quantity, and pieces
     if (formData.karat && !Number.isInteger(Number(formData.karat)))
       errors.karat = "Karat must be an integer.";
     if (formData.quantity && !Number.isInteger(Number(formData.quantity)))
@@ -224,7 +225,7 @@ const UpdateStockFormModal = ({
   };
 
   const handlePasswordVerify = async () => {
-    setPasswordError(""); // Clear previous password errors
+    setPasswordError("");
 
     if (!verificationPassword) {
       setPasswordError("Password is required for verification.");
@@ -235,9 +236,8 @@ const UpdateStockFormModal = ({
 
     try {
       const token = localStorage.getItem("token");
-      // Assuming a backend endpoint for password verification
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/verify-password`, // This endpoint needs to be implemented on your backend
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/verify-password`,
         { password: verificationPassword },
         {
           headers: {
@@ -247,10 +247,9 @@ const UpdateStockFormModal = ({
       );
 
       if (response.status === 200) {
-        // Password verified, now proceed with stock update
         await updateStock();
-        setShowPasswordPrompt(false); // Close password prompt
-        setVerificationPassword(""); // Clear password input
+        setShowPasswordPrompt(false);
+        setVerificationPassword("");
       }
     } catch (error) {
       console.error("Error verifying password:", error);
@@ -260,21 +259,11 @@ const UpdateStockFormModal = ({
         setPasswordError("An error occurred during password verification.");
       }
     } finally {
-      // Reset loading state, regardless of success or failure
       setIsVerifying(false);
     }
   };
 
   const updateStock = async () => {
-    // setMessage('');
-    // setIsSuccess(false);
-
-    // if (!validateForm()) {
-    //   setMessage("Please correct the errors in the form.");
-    //   setIsSuccess(false);
-    //   return;
-    // }
-
     setIsUpdating(true);
 
     try {
@@ -307,7 +296,6 @@ const UpdateStockFormModal = ({
         setMessage("An unexpected error occurred. Please try again.");
       }
     } finally {
-      // Reset loading state
       setIsUpdating(false);
     }
   };
@@ -321,7 +309,6 @@ const UpdateStockFormModal = ({
       contentLabel="Update Stock"
     >
       {!showPasswordPrompt ? (
-        // This is the main update form content
         <>
           <h2 className={formStyles.formTitle}>
             Update Stock: {stockData?.tagNumber || ""}
@@ -546,8 +533,6 @@ const UpdateStockFormModal = ({
               )}
             </div>
 
-           
-
             <div className={formStyles.inputGroup}>
               <label htmlFor="status">Status</label>
               <select
@@ -588,7 +573,6 @@ const UpdateStockFormModal = ({
                 </span>
               )}
             </div>
-            
           </div>
 
           <div className={formStyles.buttonRow}>
@@ -596,7 +580,7 @@ const UpdateStockFormModal = ({
               type="button"
               className={formStyles.submitButton}
               onClick={handleUpdateClick}
-              disabled={isUpdating} // Disable button while updating
+              disabled={isUpdating} 
             >
               {isUpdating ? "Updating..." : "Update"}
             </button>
@@ -610,7 +594,7 @@ const UpdateStockFormModal = ({
           </div>
         </>
       ) : (
-        // This is the password prompt content
+      
         <>
           <h2 className={formStyles.formTitle}>Verify Password</h2>
           <div className={formStyles.inputGroup}>
@@ -633,7 +617,7 @@ const UpdateStockFormModal = ({
               type="button"
               className={formStyles.submitButton}
               onClick={handlePasswordVerify}
-              disabled={isVerifying} // Disable button while verifying
+              disabled={isVerifying} 
             >
               {isVerifying ? "Verifying..." : "Verify & Update"}
             </button>

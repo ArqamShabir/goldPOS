@@ -19,7 +19,8 @@ const PaymentPage = () => {
     email: '',
     phone: '',
     card: '',
-    expiry: '',
+    // expiry: '',
+    expiry: null,
     cvv: '',
   });
   const [errors, setErrors] = useState({});
@@ -97,7 +98,7 @@ const PaymentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; // prevent double click
+    if (loading) return; 
 
     const hasErrors = Object.entries(form).some(([key, val]) => {
       validate(key, val);
@@ -114,7 +115,8 @@ const PaymentPage = () => {
     const fullName = e.target.name.value.trim();
     const email = e.target.email.value.trim();
     const card = e.target.card.value.trim().replace(/\s+/g, '');
-    const expiry = e.target.expiry.value.trim();
+    // const expiry = e.target.expiry.value.trim();
+    // const expiry = e.target.expiry.value
     const cvv = e.target.cvv.value.trim();
     const phone = e.target.phone.value.trim();
 
@@ -144,8 +146,8 @@ const PaymentPage = () => {
   className="custom-modal"
   overlayClassName="custom-overlay"
 >
-  <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Payment Completed</h2>
-  <p style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.25rem' }}>
+  <h3 style={{ textAlign: 'center', marginBottom: '1rem', color:'#3e3e3e' }}>Payment Completed</h3>
+  <p style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1rem',  color:'#3e3e3e' }}>
     Password: {generatedPassword}
   </p>
   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>

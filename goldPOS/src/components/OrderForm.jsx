@@ -1,30 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import styles from "../css/Form.module.css";
-import axios from 'axios';
+import axios from "axios";
 
 const OrderForm = ({ userId }) => {
   const defaultCategories = [
-    "Gold Ring",
-    "Gold Necklace"
+    // "Gold Ring", "Gold Necklace"
   ];
   const karatOptions = [18, 21, 22, 24];
 
-  // Original state variables
-  const [itemName, setItemName] = useState('');
-  const [tagNumber, setTagNumber] = useState('');
-  const [karat, setKarat] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [pieces, setPieces] = useState('');
-  const [waste, setWaste] = useState('');
-  const [totalWeight, setTotalWeight] = useState('');
-  const [itemPrice, setItemPrice] = useState('');
-  const [makingPerGram, setMakingPerGram] = useState('');
-  const [totalMaking, setTotalMaking] = useState('');
-  const [customerName, setCustomerName] = useState('');
+  const [itemName, setItemName] = useState("");
+  const [tagNumber, setTagNumber] = useState("");
+  const [karat, setKarat] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [pieces, setPieces] = useState("");
+  const [waste, setWaste] = useState("");
+  const [totalWeight, setTotalWeight] = useState("");
+  const [itemPrice, setItemPrice] = useState("");
+  const [makingPerGram, setMakingPerGram] = useState("");
+  const [totalMaking, setTotalMaking] = useState("");
+  const [customerName, setCustomerName] = useState("");
 
-  // States for validation errors and messages
   const [validationErrors, setValidationErrors] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [customCategories, setCustomCategories] = useState([]);
@@ -32,9 +29,12 @@ const OrderForm = ({ userId }) => {
   const fetchNextTag = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/orders/next-tag`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/orders/next-tag`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setTagNumber(res.data.nextTagNumber);
     } catch (err) {
       console.error("Error fetching next tag:", err);
@@ -43,11 +43,12 @@ const OrderForm = ({ userId }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => setCustomCategories(res.data))
-      .catch(err => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setCustomCategories(res.data))
+      .catch((err) => {
         console.error("Error fetching custom categories", err);
         if (err.response) {
           console.error("Server responded with:", err.response.data);
@@ -60,9 +61,9 @@ const OrderForm = ({ userId }) => {
   useEffect(() => {
     if (isSuccess && message) {
       const timer = setTimeout(() => {
-        setMessage('');
+        setMessage("");
         setIsSuccess(false);
-      }, 4000); 
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
@@ -72,41 +73,62 @@ const OrderForm = ({ userId }) => {
     const weight = parseFloat(totalWeight);
     const makingRate = parseFloat(makingPerGram);
 
-    if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
-      setTotalMaking((weight * makingRate).toFixed(2)); 
+    if (
+      !isNaN(weight) &&
+      !isNaN(makingRate) &&
+      weight >= 0 &&
+      makingRate >= 0
+    ) {
+      setTotalMaking((weight * makingRate).toFixed(2));
     } else {
-      setTotalMaking(''); 
+      setTotalMaking("");
     }
   }, [totalWeight, makingPerGram]);
 
-  // Validation function matching the UpdateOrderFormModal
   const validateForm = () => {
     const errors = {};
     if (!itemName) errors.itemName = "Item Name is required.";
     if (!customerName) errors.customerName = "Customer Name is required.";
-    if (customerName && customerName.length > 50) errors.customerName = "Customer Name should be less than 50 letters.";
+    if (customerName && customerName.length > 50)
+      errors.customerName = "Customer Name should be less than 50 letters.";
     if (!karat) errors.karat = "Karat is required.";
-    if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1) errors.quantity = "Quantity must be a positive integer.";
-    if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1) errors.pieces = "Pieces must be a positive integer.";
-    if (!itemPrice || isNaN(itemPrice) || itemPrice < 1) errors.itemPrice = "Item Price must be a positive number.";
-    if (waste === '' || isNaN(waste) || waste < 1) errors.waste = "Waste must be a positive number.";
-    if (!totalWeight || isNaN(totalWeight) || totalWeight < 1) errors.totalWeight = "Total Weight must be a positive number.";
-    if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
-    if (!totalMaking || isNaN(totalMaking) || totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
+    if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1)
+      errors.quantity = "Quantity must be greater than 0.";
+    if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1)
+      errors.pieces = "Pieces must be greater than 0.";
+    if (!itemPrice || isNaN(itemPrice) || itemPrice < 1)
+      errors.itemPrice = "Item Price must be greater than 0.";
+    if (waste === "" || isNaN(waste) || waste < 0)
+      errors.waste = "Waste must be a positive number.";
+    if (!totalWeight || isNaN(totalWeight) || totalWeight < 1)
+      errors.totalWeight = "Total Weight must be greater than 0.";
+    if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1)
+      errors.makingPerGram = "Making per Gram must be greater than 0.";
+    if (!totalMaking || isNaN(totalMaking) || totalMaking < 1)
+      errors.totalMaking = "Total Making must be greater than 0.";
 
-    // Integer validation checks
-    if (quantity && !Number.isInteger(Number(quantity))) errors.quantity = "Quantity must be an integer.";
-    if (pieces && !Number.isInteger(Number(pieces))) errors.pieces = "Pieces must be an integer.";
+    if (quantity && !Number.isInteger(Number(quantity)))
+      errors.quantity = "Quantity must be an integer.";
+    if (pieces && !Number.isInteger(Number(pieces)))
+      errors.pieces = "Pieces must be an integer.";
 
     const parsedItemPrice = parseFloat(itemPrice);
     const parsedTotalMaking = parseFloat(totalMaking);
-    if (!isNaN(parsedItemPrice) && !isNaN(parsedTotalMaking) && parsedItemPrice <= parsedTotalMaking) {
+    if (
+      !isNaN(parsedItemPrice) &&
+      !isNaN(parsedTotalMaking) &&
+      parsedItemPrice <= parsedTotalMaking
+    ) {
       errors.itemPrice = "Item Price must be greater than Total Making.";
     }
 
     const parsedWaste = parseFloat(waste);
     const parsedTotalWeight = parseFloat(totalWeight);
-    if (!isNaN(parsedWaste) && !isNaN(parsedTotalWeight) && parsedWaste >= parsedTotalWeight) {
+    if (
+      !isNaN(parsedWaste) &&
+      !isNaN(parsedTotalWeight) &&
+      parsedWaste >= parsedTotalWeight
+    ) {
       errors.waste = "Waste must be less than Total Weight.";
     }
 
@@ -115,7 +137,7 @@ const OrderForm = ({ userId }) => {
   };
 
   const postOrder = async () => {
-    setMessage('');
+    setMessage("");
     setIsSuccess(false);
 
     if (!validateForm()) {
@@ -126,41 +148,44 @@ const OrderForm = ({ userId }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/orders`, {
-        itemName,
-        karat,
-        quantity,
-        pieces,
-        waste,
-        totalWeight,
-        itemPrice,
-        makingPerGram,
-        totalMaking: parseFloat(totalMaking),
-        customerName
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/orders`,
+        {
+          itemName,
+          karat,
+          quantity,
+          pieces,
+          waste,
+          totalWeight,
+          itemPrice,
+          makingPerGram,
+          totalMaking: parseFloat(totalMaking),
+          customerName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
       if (response.status === 201) {
         setMessage("Order item submitted successfully!");
         setIsSuccess(true);
-        // Reset form fields
-        setItemName('');
-        setTagNumber('');
-        setKarat('');
-        setQuantity('');
-        setPieces('');
-        setWaste('');
-        setTotalWeight('');
-        setItemPrice('');
-        setMakingPerGram('');
-        setTotalMaking('');
-        setCustomerName('');
+      
+        setItemName("");
+        setTagNumber("");
+        setKarat("");
+        setQuantity("");
+        setPieces("");
+        setWaste("");
+        setTotalWeight("");
+        setItemPrice("");
+        setMakingPerGram("");
+        setTotalMaking("");
+        setCustomerName("");
         fetchNextTag();
       }
-
     } catch (error) {
       console.error("Error submitting order:", error);
       setIsSuccess(false);
@@ -172,31 +197,38 @@ const OrderForm = ({ userId }) => {
     }
   };
 
-
   return (
     <div>
       {message && (
-        <div className={isSuccess ? styles.successMessage : styles.errorMessage}>
+        <div
+          className={isSuccess ? styles.successMessage : styles.errorMessage}
+        >
           {message}
         </div>
       )}
       <div className={styles.inputRow}>
         <div className={styles.inputGroup}>
           <label htmlFor="itemName">Item Name</label>
-        <select
-  id="itemName"
-  name="itemName"
-  value={itemName}
-  onChange={(e) => setItemName(e.target.value)}
-  className={validationErrors.itemName ? styles.inputError : ''}
->
-  <option value="">Select Item</option>
-  {[...defaultCategories, ...customCategories].map((item, index) => (
-    <option key={index} value={item}>{item}</option>
-  ))}
-</select>
+          <select
+            id="itemName"
+            name="itemName"
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+            className={validationErrors.itemName ? styles.inputError : ""}
+          >
+            <option value="">Select Item</option>
+            {[...defaultCategories, ...customCategories].map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
 
-          {validationErrors.itemName && <span className={styles.errorText}>{validationErrors.itemName}</span>}
+          {validationErrors.itemName && (
+            <span className={styles.errorText}>
+              {validationErrors.itemName}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -211,14 +243,18 @@ const OrderForm = ({ userId }) => {
             name="karat"
             value={karat}
             onChange={(e) => setKarat(e.target.value)}
-            className={validationErrors.karat ? styles.inputError : ''}
+            className={validationErrors.karat ? styles.inputError : ""}
           >
             <option value="">Select Karat</option>
             {karatOptions.map((k, index) => (
-              <option key={index} value={k}>{k}</option>
+              <option key={index} value={k}>
+                {k}
+              </option>
             ))}
           </select>
-          {validationErrors.karat && <span className={styles.errorText}>{validationErrors.karat}</span>}
+          {validationErrors.karat && (
+            <span className={styles.errorText}>{validationErrors.karat}</span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -230,9 +266,13 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className={validationErrors.quantity ? styles.inputError : ''}
+            className={validationErrors.quantity ? styles.inputError : ""}
           />
-          {validationErrors.quantity && <span className={styles.errorText}>{validationErrors.quantity}</span>}
+          {validationErrors.quantity && (
+            <span className={styles.errorText}>
+              {validationErrors.quantity}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -244,9 +284,11 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={pieces}
             onChange={(e) => setPieces(e.target.value)}
-            className={validationErrors.pieces ? styles.inputError : ''}
+            className={validationErrors.pieces ? styles.inputError : ""}
           />
-          {validationErrors.pieces && <span className={styles.errorText}>{validationErrors.pieces}</span>}
+          {validationErrors.pieces && (
+            <span className={styles.errorText}>{validationErrors.pieces}</span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -258,9 +300,13 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={itemPrice}
             onChange={(e) => setItemPrice(e.target.value)}
-            className={validationErrors.itemPrice ? styles.inputError : ''}
+            className={validationErrors.itemPrice ? styles.inputError : ""}
           />
-          {validationErrors.itemPrice && <span className={styles.errorText}>{validationErrors.itemPrice}</span>}
+          {validationErrors.itemPrice && (
+            <span className={styles.errorText}>
+              {validationErrors.itemPrice}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -272,9 +318,11 @@ const OrderForm = ({ userId }) => {
             min="0"
             value={waste}
             onChange={(e) => setWaste(e.target.value)}
-            className={validationErrors.waste ? styles.inputError : ''}
+            className={validationErrors.waste ? styles.inputError : ""}
           />
-          {validationErrors.waste && <span className={styles.errorText}>{validationErrors.waste}</span>}
+          {validationErrors.waste && (
+            <span className={styles.errorText}>{validationErrors.waste}</span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -286,9 +334,13 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={totalWeight}
             onChange={(e) => setTotalWeight(e.target.value)}
-            className={validationErrors.totalWeight ? styles.inputError : ''}
+            className={validationErrors.totalWeight ? styles.inputError : ""}
           />
-          {validationErrors.totalWeight && <span className={styles.errorText}>{validationErrors.totalWeight}</span>}
+          {validationErrors.totalWeight && (
+            <span className={styles.errorText}>
+              {validationErrors.totalWeight}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -300,9 +352,13 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={makingPerGram}
             onChange={(e) => setMakingPerGram(e.target.value)}
-            className={validationErrors.makingPerGram ? styles.inputError : ''}
+            className={validationErrors.makingPerGram ? styles.inputError : ""}
           />
-          {validationErrors.makingPerGram && <span className={styles.errorText}>{validationErrors.makingPerGram}</span>}
+          {validationErrors.makingPerGram && (
+            <span className={styles.errorText}>
+              {validationErrors.makingPerGram}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -314,10 +370,14 @@ const OrderForm = ({ userId }) => {
             min="1"
             value={totalMaking}
             onChange={(e) => setTotalMaking(e.target.value)}
-            readOnly 
+            readOnly
             className={styles.inputGroup.input}
           />
-          {validationErrors.totalMaking && <span className={styles.errorText}>{validationErrors.totalMaking}</span>}
+          {validationErrors.totalMaking && (
+            <span className={styles.errorText}>
+              {validationErrors.totalMaking}
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>
@@ -328,14 +388,24 @@ const OrderForm = ({ userId }) => {
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             rows={1}
-            className={validationErrors.customerName ? styles.inputError : ''}
+            className={validationErrors.customerName ? styles.inputError : ""}
           />
-          {validationErrors.customerName && <span className={styles.errorText}>{validationErrors.customerName}</span>}
+          {validationErrors.customerName && (
+            <span className={styles.errorText}>
+              {validationErrors.customerName}
+            </span>
+          )}
         </div>
       </div>
 
       <div className={styles.buttonRow}>
-        <button type="button" className={styles.submitButton} onClick={postOrder}> Submit </button>
+        <button
+          type="button"
+          className={styles.submitButton}
+          onClick={postOrder}
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

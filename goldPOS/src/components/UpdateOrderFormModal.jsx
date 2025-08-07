@@ -10,7 +10,7 @@ const UpdateOrderFormModal = ({
   isOpen,
   onClose,
 }) => {
-  // State for form data
+
   const [formData, setFormData] = useState({
     itemName: "",
     customerName: "",
@@ -25,14 +25,16 @@ const UpdateOrderFormModal = ({
     status: "",
   });
 
-  // State for validation errors and general messages
+
   const [validationErrors, setValidationErrors] = useState({});
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [customCategories, setCustomCategories] = useState([]);
   const karatOptions = [18, 21, 22, 24];
-  const defaultCategories = ["Gold Ring", "Gold Necklace"];
+  const defaultCategories = [
+    // "Gold Ring", "Gold Necklace"
+  ];
   const statusOptions = ["Pending", "Completed"];
 
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -41,7 +43,7 @@ const UpdateOrderFormModal = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // Populate form data when the modal is opened
+  
   useEffect(() => {
     if (orderData) {
       setFormData({
@@ -57,7 +59,7 @@ const UpdateOrderFormModal = ({
         totalMaking: orderData.totalMaking,
         status: orderData.status || "Pending",
       });
-      // Clear messages and errors when new data is loaded
+     
       setMessage("");
       setValidationErrors({});
       setPasswordError("");
@@ -88,7 +90,7 @@ const UpdateOrderFormModal = ({
     }
   }, [formData.totalWeight, formData.makingPerGram]);
 
-  // Fetch custom categories on component mount
+ 
   useEffect(() => {
     const fetchCustomCategories = async () => {
       try {
@@ -101,7 +103,7 @@ const UpdateOrderFormModal = ({
             },
           }
         );
-        // Assuming the response is an array of objects with an "itemName" property
+       
         setCustomCategories(response.data);
       } catch (err) {
         console.error("Error fetching custom categories", err);
@@ -119,7 +121,7 @@ const UpdateOrderFormModal = ({
       ...prevData,
       [name]: value,
     }));
-    // Clear validation error for this field as the user types
+   
     if (validationErrors[name]) {
       setValidationErrors((prevErrors) => ({
         ...prevErrors,
@@ -139,42 +141,42 @@ const UpdateOrderFormModal = ({
       isNaN(formData.quantity) ||
       parseInt(formData.quantity, 10) < 1
     )
-      errors.quantity = "Quantity must be a positive integer.";
+      errors.quantity = "Quantity must be greater than 0.";
     if (
       !formData.pieces ||
       isNaN(formData.pieces) ||
       parseInt(formData.pieces, 10) < 1
     )
-      errors.pieces = "Pieces must be a positive integer.";
+      errors.pieces = "Pieces must be greater than 0.";
     if (
       !formData.itemPrice ||
       isNaN(formData.itemPrice) ||
       formData.itemPrice < 1
     )
-      errors.itemPrice = "Item Price must be a positive number.";
-    if (!formData.waste || isNaN(formData.waste) || formData.waste < 1)
+      errors.itemPrice = "Item Price must be greater than 0.";
+    if (!formData.waste || isNaN(formData.waste) || formData.waste < 0 )
       errors.waste = "Waste must be a positive number.";
     if (
       !formData.totalWeight ||
       isNaN(formData.totalWeight) ||
       formData.totalWeight < 1
     )
-      errors.totalWeight = "Total Weight must be a positive number.";
+      errors.totalWeight = "Total Weight must be greater than 0.";
     if (
       !formData.makingPerGram ||
       isNaN(formData.makingPerGram) ||
       formData.makingPerGram < 1
     )
-      errors.makingPerGram = "Making per Gram must be a positive number.";
+      errors.makingPerGram = "Making per Gram must be greater than 0.";
     if (
       !formData.totalMaking ||
       isNaN(formData.totalMaking) ||
       formData.totalMaking < 1
     )
-      errors.totalMaking = "Total Making must be a positive number.";
+      errors.totalMaking = "Total Making must be greater than 0.";
     if (!formData.status) errors.status = "Status is required.";
 
-    //if (formData.karat && !Number.isInteger(Number(formData.karat))) errors.karat = "Karat must be an integer.";
+    if (formData.karat && !Number.isInteger(Number(formData.karat))) errors.karat = "Karat must be an integer.";
     if (formData.quantity && !Number.isInteger(Number(formData.quantity)))
       errors.quantity = "Quantity must be an integer.";
     if (formData.pieces && !Number.isInteger(Number(formData.pieces)))
@@ -356,7 +358,6 @@ const UpdateOrderFormModal = ({
             </div>
 
             {/* Editable fields */}
-           
 
             <div className={formStyles.inputGroup}>
               <label htmlFor="itemName">Item Name</label>
@@ -584,7 +585,6 @@ const UpdateOrderFormModal = ({
                 </span>
               )}
             </div>
-            
           </div>
 
           <div className={formStyles.buttonRow}>

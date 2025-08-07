@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 
 const StockForm = ({ userId }) => {
   const defaultCategories = [
-    "Gold Ring", "Gold Necklace"
+    // "Gold Ring", "Gold Necklace"
   ];
   const karatOptions = [18, 21, 22, 24];
 
@@ -14,7 +14,6 @@ const StockForm = ({ userId }) => {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [newCustomCategory, setNewCustomCategory] = useState('');
   
-  // State variables for form fields
   const [itemName, setItemName] = useState('');
   const [tagNumber, setTagNumber] = useState('');
   const [karat, setKarat] = useState('');
@@ -27,7 +26,6 @@ const StockForm = ({ userId }) => {
   const [totalMaking, setTotalMaking] = useState('');
   const [description, setDescription] = useState('');
 
-  // States for validation errors and messages
   const [validationErrors, setValidationErrors] = useState({});
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -60,7 +58,6 @@ const StockForm = ({ userId }) => {
     fetchNextTag();
   }, [userId]);
  
-  // useEffect to handle message timeout
   useEffect(() => {
     if (isSuccess && message) {
       const timer = setTimeout(() => {
@@ -76,27 +73,26 @@ const StockForm = ({ userId }) => {
     const makingRate = parseFloat(makingPerGram);
 
     if (!isNaN(weight) && !isNaN(makingRate) && weight >= 0 && makingRate >= 0) {
-      setTotalMaking((weight * makingRate).toFixed(2)); // Calculate and format to 2 decimal places
+      setTotalMaking((weight * makingRate).toFixed(2)); 
     } else {
-      setTotalMaking(''); // Clear if inputs are invalid
+      setTotalMaking(''); 
     }
   }, [totalWeight, makingPerGram]);
 
-  // Validation function
   const validateForm = () => {
     const errors = {};
     if (!itemName || itemName === "__custom__" || itemName === "__custom__del") errors.itemName = "Item Name is required.";
     if (!karat) errors.karat = "Karat is required.";
-    if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1) errors.quantity = "Quantity must be a positive integer.";
-    if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1) errors.pieces = "Pieces must be a positive integer.";
-    if (!itemPrice || isNaN(itemPrice) || itemPrice < 1) errors.itemPrice = "Item Price must be a positive number.";
-    if (waste === '' || isNaN(waste) || waste < 1) errors.waste = "Waste must be a positive number.";
-    if (!totalWeight || isNaN(totalWeight) || totalWeight < 1) errors.totalWeight = "Total Weight must be a positive number.";
-    if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1) errors.makingPerGram = "Making per Gram must be a positive number.";
-    if (!totalMaking || isNaN(totalMaking) || totalMaking < 1) errors.totalMaking = "Total Making must be a positive number.";
+    if (!quantity || isNaN(quantity) || parseInt(quantity, 10) < 1) errors.quantity = "Quantity must be greater than 0.";
+    if (!pieces || isNaN(pieces) || parseInt(pieces, 10) < 1) errors.pieces = "Pieces must be greater than 0.";
+    if (!itemPrice || isNaN(itemPrice) || itemPrice < 1) errors.itemPrice = "Item Price must be greater than 0.";
+    if (waste === '' || isNaN(waste) || waste < 0) errors.waste = "Waste must be a positive number.";
+    if (!totalWeight || isNaN(totalWeight) || totalWeight < 1) errors.totalWeight = "Total Weight must be greater than 0.";
+    if (!makingPerGram || isNaN(makingPerGram) || makingPerGram < 1) errors.makingPerGram = "Making per Gram must be greater than 0.";
+    if (!totalMaking || isNaN(totalMaking) || totalMaking < 1) errors.totalMaking = "Total Making must be greater than 0.";
     if (!description || description.length>200 ) errors.description = "Description should be less than 200 letters.";
     
-    // Integer validation checks
+    
     if (quantity && !Number.isInteger(Number(quantity))) errors.quantity = "Quantity must be an integer.";
     if (pieces && !Number.isInteger(Number(pieces))) errors.pieces = "Pieces must be an integer.";
 
@@ -148,7 +144,7 @@ const StockForm = ({ userId }) => {
       if (response.status === 201) {
         setMessage("Stock item submitted successfully!");
         setIsSuccess(true);
-        // Reset form fields
+        
         setItemName('');
         setTagNumber('');
         setKarat('');
@@ -291,7 +287,7 @@ const StockForm = ({ userId }) => {
                 const token = localStorage.getItem("token");
                 axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories/custom`, {
                   userId,
-                  name: newCustomCategory
+                  name: newCustomCategory.toLowerCase()
                 }, {
                   headers: {
                     Authorization: `Bearer ${token}`
