@@ -8,6 +8,35 @@
   border-radius: 12px;
   background: #f9f9f9;
 }
+.error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: -8px;
+  text-align: left;
+  margin-bottom: 8px;
+}
+/* Add to your global CSS or Form.module.css */
+.custom-modal {
+  background: white;
+  padding: 2rem;
+  max-width: 400px;
+  margin: auto;
+  border-radius: 8px;
+  outline: none;
+}
+
+.custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.datepic{
+  width: 100%;
+}
+
 
 .heading {
   font-size: 24px;

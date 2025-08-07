@@ -53,7 +53,7 @@ app.post('/api/login', async (req, res) => {
 
 // POST /api/create-user-after-payment
 app.post('/api/create-user-after-payment', async (req, res) => {
-  const { name, username, password } = req.body;
+  const { name, username, password, phoneNumber } = req.body;
 
   try {
     const existing = await User.findOne({ username });
@@ -62,7 +62,7 @@ app.post('/api/create-user-after-payment', async (req, res) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    const user = new User({ name, username, password: hash });
+    const user = new User({ name, username, password: hash, phoneNumber });
     await user.save();
 
     // Generate token immediately
