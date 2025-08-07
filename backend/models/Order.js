@@ -5,30 +5,14 @@ const OrderSchema = new mongoose.Schema({
   itemName: { type: String, required: true },
   customerName: { type: String, required: true },
   tagNumber: { type: String, required: true,  },
-  karat: {type: Number, required: true, min: 0,       
-    validate: {  
-       validator: Number.isInteger,
-       message: '{VALUE} is not an integer value for karat'
-    }
-
-  },
-  quantity: {type: Number , required: true, min: 0,       
-    validate: {  
-       validator: Number.isInteger,
-       message: '{VALUE} is not an integer value for quantity'
-    }
-  },
-  pieces: {type: Number, required: true , min: 0,       
-    validate: {  
-       validator: Number.isInteger,
-       message: '{VALUE} is not an integer value for pieces'
-    }
-  },
-  itemPrice: {type: Number, required: true , min: 0},
+  karat: {type: Number, required: true, min: 1},
+  quantity: {type: Number , required: true, min: 1},
+  pieces: {type: Number, required: true , min: 1 },
+  itemPrice: {type: Number, required: true , min: 1},
   waste :  {type: Number, required: true , min: 0},
-  totalWeight: {type: Number, required: true , min: 0  },
-  makingPerGram: {type: Number, required: true , min: 0},
-  totalMaking: {type: Number , required: true , min: 0},
+  totalWeight: {type: Number, required: true , min: 1  },
+  makingPerGram: {type: Number, required: true , min: 1},
+  totalMaking: {type: Number , required: true , min: 1},
   status: {
     type: String,
     required: true,
