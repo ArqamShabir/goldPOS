@@ -546,24 +546,7 @@ const UpdateStockFormModal = ({
               )}
             </div>
 
-            <div className={formStyles.inputGroup}>
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={1}
-                className={
-                  validationErrors.description ? formStyles.inputError : ""
-                }
-              />
-              {validationErrors.description && (
-                <span className={formStyles.errorText}>
-                  {validationErrors.description}
-                </span>
-              )}
-            </div>
+           
 
             <div className={formStyles.inputGroup}>
               <label htmlFor="status">Status</label>
@@ -586,6 +569,26 @@ const UpdateStockFormModal = ({
                 </span>
               )}
             </div>
+
+            <div className={formStyles.inputGroup}>
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={1}
+                className={
+                  validationErrors.description ? formStyles.inputError : ""
+                }
+              />
+              {validationErrors.description && (
+                <span className={formStyles.errorText}>
+                  {validationErrors.description}
+                </span>
+              )}
+            </div>
+            
           </div>
 
           <div className={formStyles.buttonRow}>

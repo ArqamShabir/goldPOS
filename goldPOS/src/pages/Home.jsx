@@ -27,32 +27,32 @@ export default function Home() {
   const [loadingGoldRate, setLoadingGoldRate] = useState(true);
   const [errorGoldRate, setErrorGoldRate] = useState(null);
 
-  useEffect(() => {
-    const fetchGoldRate = async () => {
-      try {
-        setLoadingGoldRate(true);
-        setErrorGoldRate(null);
+  // useEffect(() => {
+  //   const fetchGoldRate = async () => {
+  //     try {
+  //       setLoadingGoldRate(true);
+  //       setErrorGoldRate(null);
 
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/gold-rate-live`);
+  //       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/gold-rate-live`);
 
-        if (response.data && response.data.prices) {
-          setGoldRates(response.data.prices); 
-          console.log("Live gold rate data fetched:", response.data.prices);
-        } else {
-          throw new Error("Invalid response from gold rate API.");
-        }
-      } catch (error) {
-        console.error("Error fetching live gold rate:", error);
-        setErrorGoldRate(error.message || "Could not fetch live gold rate.");
-      } finally {
-        setLoadingGoldRate(false);
-      }
-    };
+  //       if (response.data && response.data.prices) {
+  //         setGoldRates(response.data.prices); 
+  //         console.log("Live gold rate data fetched:", response.data.prices);
+  //       } else {
+  //         throw new Error("Invalid response from gold rate API.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching live gold rate:", error);
+  //       setErrorGoldRate(error.message || "Could not fetch live gold rate.");
+  //     } finally {
+  //       setLoadingGoldRate(false);
+  //     }
+  //   };
 
-    fetchGoldRate();
-    const intervalId = setInterval(fetchGoldRate, 21600000);
-    return () => clearInterval(intervalId);
-  }, []);
+  //   fetchGoldRate();
+  //   const intervalId = setInterval(fetchGoldRate, 21600000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   useEffect(() => {
     const fetchUserInfo = async () => {

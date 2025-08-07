@@ -356,24 +356,7 @@ const UpdateOrderFormModal = ({
             </div>
 
             {/* Editable fields */}
-            <div className={formStyles.inputGroup}>
-              <label htmlFor="customerName">Customer Name</label>
-              <input
-                type="text"
-                id="customerName"
-                name="customerName"
-                value={formData.customerName}
-                onChange={handleChange}
-                className={
-                  validationErrors.customerName ? formStyles.inputError : ""
-                }
-              />
-              {validationErrors.customerName && (
-                <span className={formStyles.errorText}>
-                  {validationErrors.customerName}
-                </span>
-              )}
-            </div>
+           
 
             <div className={formStyles.inputGroup}>
               <label htmlFor="itemName">Item Name</label>
@@ -582,6 +565,26 @@ const UpdateOrderFormModal = ({
                 </span>
               )}
             </div>
+
+            <div className={formStyles.inputGroup}>
+              <label htmlFor="customerName">Customer Name</label>
+              <input
+                type="text"
+                id="customerName"
+                name="customerName"
+                value={formData.customerName}
+                onChange={handleChange}
+                className={
+                  validationErrors.customerName ? formStyles.inputError : ""
+                }
+              />
+              {validationErrors.customerName && (
+                <span className={formStyles.errorText}>
+                  {validationErrors.customerName}
+                </span>
+              )}
+            </div>
+            
           </div>
 
           <div className={formStyles.buttonRow}>
