@@ -103,7 +103,7 @@ router.put('/:orderId',authenticateUser, async (req, res) => {
       itemPrice,
       makingPerGram,
       totalMaking,
-      // status,
+      status,
     } = req.body;
 
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -119,7 +119,7 @@ router.put('/:orderId',authenticateUser, async (req, res) => {
         itemPrice,
         makingPerGram,
         totalMaking,
-        // status,
+        status,
       },
       { new: true } 
     );
